@@ -25,8 +25,12 @@ const QuinceaneraMesage = () => {
           <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-pink-300 to-purple-300"></div>
 
           <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-            Con la bendición de DIOS, de mis padres Augusto Ismael Callejas Jiménez y Gittel Marlene Tovar Galván y de
-            mi madrina Mariana Elvira Callejas Jiménez.
+            Con alegría en el corazón y sueños en el alma, quiero compartir con ustedes este momento tan especial, donde
+            la gratitud y la ilusión se unen en un solo día.
+          </p>
+          <p className="text-lg md:text-xl text-gray-700 italic mb-8 leading-relaxed">
+            "Los momentos más hermosos se viven rodeados de quienes amamos... gracias por ser parte de este capítulo tan
+            importante en mi vida."
           </p>
 
           <div className="mt-8 text-pink-600 font-medium">

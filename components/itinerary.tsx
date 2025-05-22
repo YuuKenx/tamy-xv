@@ -33,8 +33,8 @@ const Itinerary = () => {
       id: 1,
       time: "15:00",
       title: "Ceremonia religiosa de agradecimiento",
-      location: "Preciosa Sangre de Cristo",
-      address: "C. Reforma, Centro, 42180 Pachuquilla, Hgo.",
+      location: "Iglesia San Judas Tadeo",
+      address: "166, Carboneras CP 42180 Mineral de la Reforma, Hgo.",
       description:
         "Te invito a acompañarme en esta ceremonia especial donde agradeceré a Dios por estos 15 años de vida y recibiré la bendición para esta nueva etapa que comienza.",
       mapUrl: "https://maps.google.com",
