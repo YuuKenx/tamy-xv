@@ -4,7 +4,6 @@ import CountdownModal from "@/components/countdown-modal"
 import CoverSection from "@/components/cover-section"
 import FamilyPhotos from "@/components/family-photos"
 import QuinceaneraMesage from "@/components/parents-message"
-import GodmotherMessage from "@/components/godmother-message"
 import Itinerary from "@/components/itinerary"
 import GodmotherVideo from "@/components/godmother-video"
 import RsvpForm from "@/components/rsvp-form"
@@ -37,8 +36,6 @@ export default function Home() {
         <FamilyPhotos />
 
         <QuinceaneraMesage />
-
-        <GodmotherMessage />
 
         <Itinerary />
 
