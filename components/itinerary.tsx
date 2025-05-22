@@ -86,7 +86,7 @@ const Itinerary = () => {
         >
           <h2 className="text-3xl md:text-5xl font-bold text-pink-600 mb-4">Itinerario</h2>
           <p className="text-lg text-pink-500 max-w-2xl mx-auto">
-            Acompáñanos en este día tan especial. Hemos preparado una celebración inolvidable para Tamara.
+            Acompáñanos en este día tan especial. Hemos preparado una celebración inolvidable para Tamy.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-pink-300 to-purple-300 mx-auto mt-6"></div>
         </motion.div>
