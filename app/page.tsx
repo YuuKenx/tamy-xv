@@ -29,7 +29,7 @@ export default function Home() {
       <MusicPlayer />
 
       <div className="container mx-auto px-4 py-8 relative z-10">
-        <CoverSection name="Tam" />
+        <CoverSection name="Tamy" />
 
         <CountdownSection />
 

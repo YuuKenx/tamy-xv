@@ -48,7 +48,7 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           className="relative w-64 h-64 md:w-80 md:h-80 mx-auto mb-8 rounded-full overflow-hidden border-4 border-pink-300 shadow-lg"
         >
           <div className="absolute inset-0">
-            <img src="/images/1.jpg" alt="Foto de Tam" className="w-full h-full object-cover rounded-full" />
+            <img src="/images/1.jpg" alt="Foto de Tamy" className="w-full h-full object-cover rounded-full" />
           </div>
         </motion.div>
 
@@ -58,7 +58,7 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           transition={{ delay: 1.5, duration: 0.8 }}
           className="text-4xl md:text-5xl font-semibold text-pink-500 mb-4"
         >
-          Tam
+          Tamy
         </motion.h2>
 
         <motion.div
