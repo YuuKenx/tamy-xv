@@ -8,9 +8,17 @@ interface CoverSectionProps {
 
 const CoverSection = ({ name }: CoverSectionProps) => {
   const [mounted, setMounted] = useState(false)
+  const [imageVersion, setImageVersion] = useState(Date.now())
 
   useEffect(() => {
     setMounted(true)
+
+    // Forzar actualización de la imagen
+    const timer = setTimeout(() => {
+      setImageVersion(Date.now())
+    }, 500)
+
+    return () => clearTimeout(timer)
   }, [])
 
   if (!mounted) return null
@@ -47,9 +55,8 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           transition={{ delay: 1.2, duration: 0.8 }}
           className="relative w-64 h-64 md:w-80 md:h-80 mx-auto mb-8 rounded-full overflow-hidden border-4 border-pink-300 shadow-lg"
         >
-          {/* Opción 1: Imagen estática con URL absoluta */}
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Imagen%20de%20WhatsApp%202025-04-24%20a%20las%2011.42.28_1128e640.jpg-dmWDcGS5jwOWRsffaWwsnTMKAmt7WT.jpeg"
+            src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1.jpg-hTe2x7nvIsDPgVzxcORL3BzKZuyD3C.jpeg?v=${imageVersion}`}
             alt="Foto de Tamy"
             className="w-full h-full object-cover"
           />

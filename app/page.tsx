@@ -37,11 +37,11 @@ export default function Home() {
 
         <QuinceaneraMesage />
 
+        <GodmotherVideo />
+
         <Itinerary />
 
         <GallerySection />
-
-        <GodmotherVideo />
 
         <RsvpForm />
 
