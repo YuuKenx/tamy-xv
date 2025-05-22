@@ -31,7 +31,7 @@ const Itinerary = () => {
   const events = [
     {
       id: 1,
-      time: "15:00",
+      time: "13:00",
       title: "Ceremonia religiosa de agradecimiento",
       location: "Iglesia San Judas Tadeo",
       address: "166, Carboneras CP 42180 Mineral de la Reforma, Hgo.",
@@ -44,12 +44,12 @@ const Itinerary = () => {
     },
     {
       id: 2,
-      time: "16:00",
-      title: "Recepción y Vals",
-      location: "Rivento",
+      time: "15:30",
+      title: "Recepción en Rivento Salón y Jardín",
+      location: "Rivento  Salón y Jardín",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
       description:
-        "Después de la ceremonia, te espero en Rivento para celebrar juntos este día tan especial. Disfrutaremos de una tarde llena de música, baile y momentos inolvidables.",
+        "Después de la ceremonia, te espero en Rivento para celebrar juntos este día tan especial. Disfrutaremos de una tarde llena de música, baile y momentos inolvidables. Recuerda que al ser parte importante de esta celebración es necesario tu participación e integración para construir juntos momento mágicos.",
       mapUrl: "https://maps.google.com",
       icon: <Music className="w-6 h-6" />,
       image: "/elegant-ballroom.png",
