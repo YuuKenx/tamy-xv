@@ -8,23 +8,37 @@ const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [volume, setVolume] = useState(0.5)
+  const [isLoaded, setIsLoaded] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
-    audioRef.current = new Audio("/placeholder-music.mp3")
-    audioRef.current.loop = true
-    audioRef.current.volume = volume
+    // Crear el elemento de audio
+    audioRef.current = new Audio("/music/musica.mp3")
 
+    // Configurar propiedades
+    if (audioRef.current) {
+      audioRef.current.loop = true
+      audioRef.current.volume = volume
+      audioRef.current.preload = "auto"
+
+      // Evento para detectar cuando la música está cargada
+      audioRef.current.addEventListener("canplaythrough", () => {
+        setIsLoaded(true)
+      })
+    }
+
+    // Limpiar al desmontar
     return () => {
       if (audioRef.current) {
         audioRef.current.pause()
+        audioRef.current.src = ""
         audioRef.current = null
       }
     }
   }, [])
 
   useEffect(() => {
-    if (!audioRef.current) return
+    if (!audioRef.current || !isLoaded) return
 
     if (isPlaying) {
       audioRef.current.play().catch((error) => {
@@ -34,7 +48,7 @@ const MusicPlayer = () => {
     } else {
       audioRef.current.pause()
     }
-  }, [isPlaying])
+  }, [isPlaying, isLoaded])
 
   useEffect(() => {
     if (!audioRef.current) return
@@ -68,8 +82,9 @@ const MusicPlayer = () => {
         onClick={togglePlay}
         className="w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
         aria-label={isPlaying ? "Pausar música" : "Reproducir música"}
+        disabled={!isLoaded}
       >
-        {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+        {isPlaying ? <Pause size={18} /> : <Play size={18} className="ml-1" />}
       </button>
 
       <div className="hidden sm:flex items-center gap-2">
@@ -77,6 +92,7 @@ const MusicPlayer = () => {
           onClick={toggleMute}
           className="text-pink-600 hover:text-pink-700"
           aria-label={isMuted ? "Activar sonido" : "Silenciar"}
+          disabled={!isLoaded}
         >
           {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
         </button>
@@ -90,10 +106,13 @@ const MusicPlayer = () => {
           onChange={handleVolumeChange}
           className="w-20 accent-pink-500"
           aria-label="Volumen"
+          disabled={!isLoaded}
         />
       </div>
 
-      <div className="text-xs text-pink-600 hidden sm:block">{isPlaying ? "♪ Vals de Quinceañera" : "Música"}</div>
+      <div className="text-xs text-pink-600 hidden sm:block">
+        {!isLoaded ? "Cargando música..." : isPlaying ? "♪ Música de XV años" : "Música"}
+      </div>
     </div>
   )
 }
