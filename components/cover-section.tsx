@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import Image from "next/image"
 
 interface CoverSectionProps {
   name: string
@@ -48,7 +47,9 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           transition={{ delay: 1.2, duration: 0.8 }}
           className="relative w-64 h-64 md:w-80 md:h-80 mx-auto mb-8 rounded-full overflow-hidden border-4 border-pink-300 shadow-lg"
         >
-          <Image src="/images/1.jpg" alt="Foto de Tam" layout="fill" objectFit="cover" className="rounded-full" />
+          <div className="absolute inset-0">
+            <img src="/images/1.jpg" alt="Foto de Tam" className="w-full h-full object-cover rounded-full" />
+          </div>
         </motion.div>
 
         <motion.h2
