@@ -1,10 +1,14 @@
 "use client"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react"
 import type React from "react"
 
 import { Play, Pause, Volume2, VolumeX } from "lucide-react"
 
-const MusicPlayer = () => {
+export interface MusicPlayerRef {
+  startMusic: () => void
+}
+
+const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [volume, setVolume] = useState(0.5)
@@ -36,6 +40,18 @@ const MusicPlayer = () => {
       }
     }
   }, [])
+
+  // Exponer la función startMusic al componente padre
+  useImperativeHandle(ref, () => ({
+    startMusic: () => {
+      if (audioRef.current && isLoaded && !isPlaying) {
+        audioRef.current.play().catch((error) => {
+          console.error("Error playing audio:", error)
+        })
+        setIsPlaying(true)
+      }
+    },
+  }))
 
   useEffect(() => {
     if (!audioRef.current || !isLoaded) return
@@ -115,6 +131,8 @@ const MusicPlayer = () => {
       </div>
     </div>
   )
-}
+})
+
+MusicPlayer.displayName = "MusicPlayer"
 
 export default MusicPlayer

@@ -4,9 +4,10 @@ import { X } from "lucide-react"
 
 interface CountdownModalProps {
   targetDate: string
+  onClose?: () => void
 }
 
-const CountdownModal = ({ targetDate }: CountdownModalProps) => {
+const CountdownModal = ({ targetDate, onClose }: CountdownModalProps) => {
   const [isOpen, setIsOpen] = useState(true)
   const [countdown, setCountdown] = useState({
     days: 0,
@@ -38,15 +39,20 @@ const CountdownModal = ({ targetDate }: CountdownModalProps) => {
     return () => clearInterval(interval)
   }, [targetDate])
 
+  const handleClose = () => {
+    setIsOpen(false)
+    // Llamar la función onClose que iniciará la música
+    if (onClose) {
+      onClose()
+    }
+  }
+
   if (!isOpen) return null
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      onClick={() => setIsOpen(false)}
-    >
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={handleClose}>
       <div className="bg-white rounded-lg p-8 max-w-md w-full shadow-xl relative" onClick={(e) => e.stopPropagation()}>
-        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setIsOpen(false)}>
+        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={handleClose}>
           <X size={24} />
         </button>
 
