@@ -1,74 +1,31 @@
 "use client"
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react"
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const FamilyPhotos = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalImage, setModalImage] = useState(0)
 
-  // Array con las 10 fotos familiares
+  // Mock photo data - replace with actual photos
   const photos = [
-    {
-      id: 1,
-      src: "/images/familia1.jpg",
-      alt: "Familia reunida",
-      caption: "Momentos especiales en familia",
-    },
+    { id: 1, src: "/placeholder.svg?height=400&width=600", alt: "Familia reunida", caption: "Nuestra familia" },
     {
       id: 2,
-      src: "/images/familia2.jpg",
-      alt: "Celebración familiar",
-      caption: "Celebrando juntos",
+      src: "/placeholder.svg?height=400&width=600",
+      alt: "Tamara con sus padres",
+      caption: "Tamara con sus padres",
     },
     {
       id: 3,
-      src: "/images/familia3.jpg",
-      alt: "Reunión familiar",
-      caption: "Unidos siempre",
+      src: "/placeholder.svg?height=400&width=600",
+      alt: "Tamara de pequeña",
+      caption: "Recuerdos de la infancia",
     },
     {
       id: 4,
-      src: "/images/familia4.jpg",
-      alt: "Momentos en familia",
-      caption: "Recuerdos inolvidables",
-    },
-    {
-      id: 5,
-      src: "/images/familia5.jpg",
-      alt: "Familia feliz",
-      caption: "Sonrisas que perduran",
-    },
-    {
-      id: 6,
-      src: "/images/familia6.jpg",
-      alt: "Tiempo en familia",
-      caption: "Amor incondicional",
-    },
-    {
-      id: 7,
-      src: "/images/familia7.jpg",
-      alt: "Familia unida",
-      caption: "Lazos que nos unen",
-    },
-    {
-      id: 8,
-      src: "/images/familia8.jpg",
-      alt: "Momentos familiares",
-      caption: "Tesoros del corazón",
-    },
-    {
-      id: 9,
-      src: "/images/familia9.jpg",
-      alt: "Familia completa",
-      caption: "Nuestra historia",
-    },
-    {
-      id: 10,
-      src: "/images/familia10.jpg",
-      alt: "Familia querida",
-      caption: "Amor eterno",
+      src: "/placeholder.svg?height=400&width=600",
+      alt: "Celebración familiar",
+      caption: "Momentos especiales",
     },
   ]
 
@@ -79,50 +36,6 @@ const FamilyPhotos = () => {
   const prevSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length)
   }
-
-  const openModal = (index: number) => {
-    setModalImage(index)
-    setIsModalOpen(true)
-    document.body.style.overflow = "hidden"
-  }
-
-  const closeModal = () => {
-    setIsModalOpen(false)
-    document.body.style.overflow = "auto"
-  }
-
-  const nextModalImage = () => {
-    setModalImage((prevIndex) => (prevIndex + 1) % photos.length)
-  }
-
-  const prevModalImage = () => {
-    setModalImage((prevIndex) => (prevIndex - 1 + photos.length) % photos.length)
-  }
-
-  // Handle keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isModalOpen) return
-
-      if (e.key === "ArrowRight") nextModalImage()
-      if (e.key === "ArrowLeft") prevModalImage()
-      if (e.key === "Escape") closeModal()
-    }
-
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [isModalOpen])
-
-  // Auto-advance slides every 5 seconds
-  useEffect(() => {
-    if (isModalOpen) return
-
-    const interval = setInterval(() => {
-      nextSlide()
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [currentIndex, isModalOpen])
 
   return (
     <section className="py-20 bg-pink-50 rounded-3xl my-16">
@@ -137,54 +50,32 @@ const FamilyPhotos = () => {
           Nuestra Familia
         </motion.h2>
 
-        <div className="relative max-w-4xl mx-auto">
-          {/* Main carousel */}
+        <div className="relative max-w-3xl mx-auto">
           <div className="overflow-hidden rounded-xl shadow-xl">
-            <div className="relative aspect-[4/3] bg-pink-100">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentIndex}
-                  initial={{ opacity: 0, x: 300 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -300 }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute inset-0 cursor-pointer"
-                  onClick={() => openModal(currentIndex)}
-                >
-                  <img
-                    src={photos[currentIndex].src || "/placeholder.svg"}
-                    alt={photos[currentIndex].alt}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white text-lg font-medium">{photos[currentIndex].caption}</p>
-                        <p className="text-white/80 text-sm">
-                          {currentIndex + 1} de {photos.length}
-                        </p>
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          openModal(currentIndex)
-                        }}
-                        className="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors"
-                        aria-label="Ver imagen completa"
-                      >
-                        <Maximize2 size={20} className="text-white" />
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+            <div className="relative aspect-[3/2] bg-pink-100">
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="absolute inset-0"
+              >
+                <img
+                  src={photos[currentIndex].src || "/placeholder.svg"}
+                  alt={photos[currentIndex].alt}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
+                  <p className="text-lg font-medium">{photos[currentIndex].caption}</p>
+                </div>
+              </motion.div>
             </div>
           </div>
 
-          {/* Navigation buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-3 rounded-full shadow-md z-10 transition-colors"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-2 rounded-full shadow-md z-10"
             aria-label="Foto anterior"
           >
             <ChevronLeft size={24} />
@@ -192,109 +83,24 @@ const FamilyPhotos = () => {
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-3 rounded-full shadow-md z-10 transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-2 rounded-full shadow-md z-10"
             aria-label="Siguiente foto"
           >
             <ChevronRight size={24} />
           </button>
 
-          {/* Dots indicator */}
-          <div className="flex justify-center mt-6 gap-2">
+          <div className="flex justify-center mt-4 gap-2">
             {photos.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentIndex ? "bg-pink-600" : "bg-pink-300"
-                }`}
+                className={`w-3 h-3 rounded-full ${index === currentIndex ? "bg-pink-600" : "bg-pink-300"}`}
                 aria-label={`Ir a la foto ${index + 1}`}
               />
             ))}
           </div>
-
-          {/* Thumbnail strip */}
-          <div className="mt-8 grid grid-cols-5 md:grid-cols-10 gap-2">
-            {photos.map((photo, index) => (
-              <button
-                key={photo.id}
-                onClick={() => setCurrentIndex(index)}
-                className={`relative aspect-square rounded-lg overflow-hidden transition-all ${
-                  index === currentIndex
-                    ? "ring-2 ring-pink-500 scale-105"
-                    : "hover:scale-105 opacity-70 hover:opacity-100"
-                }`}
-              >
-                <img src={photo.src || "/placeholder.svg"} alt={photo.alt} className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
         </div>
       </div>
-
-      {/* Lightbox Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-            onClick={closeModal}
-          >
-            <button
-              className="absolute top-4 right-4 text-white hover:text-pink-300 z-10"
-              onClick={closeModal}
-              aria-label="Cerrar galería"
-            >
-              <X size={32} />
-            </button>
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                prevModalImage()
-              }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full z-10"
-              aria-label="Imagen anterior"
-            >
-              <ChevronLeft size={24} />
-            </button>
-
-            <motion.div
-              key={modalImage}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
-              className="relative max-w-4xl max-h-[80vh] w-full h-full flex items-center justify-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={photos[modalImage].src || "/placeholder.svg"}
-                alt={photos[modalImage].alt}
-                className="max-w-full max-h-full object-contain rounded-lg"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white rounded-b-lg">
-                <p className="text-lg font-medium">{photos[modalImage].caption}</p>
-                <p className="text-sm opacity-80">
-                  {modalImage + 1} de {photos.length}
-                </p>
-              </div>
-            </motion.div>
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                nextModalImage()
-              }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full z-10"
-              aria-label="Siguiente imagen"
-            >
-              <ChevronRight size={24} />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   )
 }
