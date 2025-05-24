@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Clock, MapPin, Calendar, Music, Cake, ChevronDown, ChevronUp } from "lucide-react"
-import Image from "next/image"
 
 const Itinerary = () => {
   const [activeEvent, setActiveEvent] = useState<number | null>(null)
@@ -31,7 +30,7 @@ const Itinerary = () => {
   const events = [
     {
       id: 1,
-      time: "13:00",
+      time: "15:00",
       title: "Ceremonia religiosa de agradecimiento",
       location: "Iglesia San Judas Tadeo",
       address: "166, Carboneras CP 42180 Mineral de la Reforma, Hgo.",
@@ -39,32 +38,32 @@ const Itinerary = () => {
         "Te invito a acompañarme en esta ceremonia especial donde agradeceré a Dios por estos 15 años de vida y recibiré la bendición para esta nueva etapa que comienza.",
       mapUrl: "https://maps.google.com",
       icon: <Calendar className="w-6 h-6" />,
-      image: "/beautiful-church-interior.png",
+      image: "/images/iglesia.jpg",
       color: "from-pink-400 to-pink-600",
     },
     {
       id: 2,
-      time: "15:30",
-      title: "Recepción en Rivento Salón y Jardín",
-      location: "Rivento  Salón y Jardín",
+      time: "16:00",
+      title: "Recepción y Vals",
+      location: "Rivento",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
       description:
-        "Después de la ceremonia, te espero en Rivento Salón y Jardín para celebrar juntos este día tan especial. Disfrutaremos de una tarde llena de música, baile y momentos inolvidables. Recuerda que al ser parte importante de esta celebración es necesario tu participación e integración para construir juntos momento mágicos.",
+        "Después de la ceremonia, te espero en Rivento para celebrar juntos este día tan especial. Disfrutaremos de una tarde llena de música, baile y momentos inolvidables.",
       mapUrl: "https://maps.google.com",
       icon: <Music className="w-6 h-6" />,
-      image: "/elegant-ballroom.png",
+      image: "/images/salon.jpg",
       color: "from-purple-400 to-purple-600",
     },
     {
       id: 3,
-      time: "16:30",
-      title: "Entrada de Tamy",
-      location: "Rivento Salón y Jardín",
+      time: "22:00",
+      title: "Pastel",
+      location: "Rivento",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
-      description: "Demos juntos la bienvenida a nuestra celebrada ¡Tamy! en donde realizará su entrada para comenzar está gran celebración",
+      description: "Momento especial donde partiremos el pastel y brindaremos por mis XV años. ¡No te lo pierdas!",
       mapUrl: "https://maps.google.com",
       icon: <Cake className="w-6 h-6" />,
-      image: "/elegant-quinceanera-cake.png",
+      image: "/images/salon.jpg",
       color: "from-rose-400 to-rose-600",
     },
   ]
@@ -109,12 +108,10 @@ const Itinerary = () => {
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
                 <div className={`h-48 relative overflow-hidden`}>
                   <div className="absolute inset-0">
-                    <Image
+                    <img
                       src={event.image || "/placeholder.svg"}
                       alt={event.title}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-700 hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                     />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
