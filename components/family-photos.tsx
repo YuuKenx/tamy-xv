@@ -2,76 +2,95 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react"
-import Image from "next/image"
 
 const FamilyPhotos = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalImage, setModalImage] = useState(0)
 
-  // Array con las 10 fotos familiares usando URLs de blob storage como en tu ejemplo
+  // TUS RUTAS REALES - CORREGIDAS para usar /image/ en lugar de /images/
   const photos = [
     {
       id: 1,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia1.jpg-IRKKi.jpeg",
+      src: "/image/familia1.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=familia reunida celebrando momentos especiales",
       alt: "Familia reunida",
       caption: "Momentos especiales en familia",
     },
     {
       id: 2,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia2.jpg-NpHug.jpeg",
+      src: "/image/familia2.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=celebración familiar con sonrisas y alegría",
       alt: "Celebración familiar",
       caption: "Celebrando juntos",
     },
     {
       id: 3,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia3.jpg-i9hLx.jpeg",
+      src: "/image/familia3.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=reunión familiar unida con amor",
       alt: "Reunión familiar",
       caption: "Unidos siempre",
     },
     {
       id: 4,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia4.jpg-igXbk.jpeg",
+      src: "/image/familia4.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=momentos inolvidables en familia",
       alt: "Momentos en familia",
       caption: "Recuerdos inolvidables",
     },
     {
       id: 5,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia5.jpg-sYoru.jpeg",
+      src: "/image/familia5.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=familia feliz con sonrisas radiantes",
       alt: "Familia feliz",
       caption: "Sonrisas que perduran",
     },
     {
       id: 6,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia6.jpg-R6WWD.jpeg",
+      src: "/image/familia6.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=tiempo de calidad en familia",
       alt: "Tiempo en familia",
       caption: "Amor incondicional",
     },
     {
       id: 7,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia7.jpg-SCxO1.jpeg",
+      src: "/image/familia7.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=familia unida con lazos fuertes",
       alt: "Familia unida",
       caption: "Lazos que nos unen",
     },
     {
       id: 8,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia8.jpg-kUAGE.jpeg",
+      src: "/image/familia8.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=momentos familiares como tesoros",
       alt: "Momentos familiares",
       caption: "Tesoros del corazón",
     },
     {
       id: 9,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia9.jpg-HeRRY.jpeg",
+      src: "/image/familia9.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=familia completa con historia compartida",
       alt: "Familia completa",
       caption: "Nuestra historia",
     },
     {
       id: 10,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia10.jpg-EfrdP.jpeg",
+      src: "/image/familia10.jpg",
+      fallback: "/placeholder.svg?height=600&width=800&query=familia querida con amor eterno",
       alt: "Familia querida",
       caption: "Amor eterno",
     },
   ]
+
+  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
+
+  const handleImageError = (index: number) => {
+    setImageErrors((prev) => ({ ...prev, [index]: true }))
+  }
+
+  const getImageSrc = (index: number) => {
+    return imageErrors[index] ? photos[index].fallback : photos[index].src
+  }
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % photos.length)
@@ -100,7 +119,6 @@ const FamilyPhotos = () => {
     setModalImage((prevIndex) => (prevIndex - 1 + photos.length) % photos.length)
   }
 
-  // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isModalOpen) return
@@ -114,7 +132,6 @@ const FamilyPhotos = () => {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [isModalOpen])
 
-  // Auto-advance slides every 5 seconds
   useEffect(() => {
     if (isModalOpen) return
 
@@ -139,7 +156,6 @@ const FamilyPhotos = () => {
         </motion.h2>
 
         <div className="relative max-w-4xl mx-auto">
-          {/* Main carousel */}
           <div className="overflow-hidden rounded-xl shadow-xl">
             <div className="relative aspect-[4/3] bg-pink-100">
               <AnimatePresence mode="wait">
@@ -152,11 +168,11 @@ const FamilyPhotos = () => {
                   className="absolute inset-0 cursor-pointer"
                   onClick={() => openModal(currentIndex)}
                 >
-                  <Image
-                    src={photos[currentIndex].src || "/placeholder.svg"}
+                  <img
+                    src={getImageSrc(currentIndex) || "/placeholder.svg"}
                     alt={photos[currentIndex].alt}
-                    fill
-                    className="object-cover"
+                    className="w-full h-full object-cover"
+                    onError={() => handleImageError(currentIndex)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end p-6">
                     <div className="flex items-center justify-between">
@@ -183,7 +199,6 @@ const FamilyPhotos = () => {
             </div>
           </div>
 
-          {/* Navigation buttons */}
           <button
             onClick={prevSlide}
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-3 rounded-full shadow-md z-10 transition-colors"
@@ -200,7 +215,6 @@ const FamilyPhotos = () => {
             <ChevronRight size={24} />
           </button>
 
-          {/* Dots indicator */}
           <div className="flex justify-center mt-6 gap-2">
             {photos.map((_, index) => (
               <button
@@ -214,7 +228,6 @@ const FamilyPhotos = () => {
             ))}
           </div>
 
-          {/* Thumbnail strip */}
           <div className="mt-8 grid grid-cols-5 md:grid-cols-10 gap-2">
             {photos.map((photo, index) => (
               <button
@@ -226,14 +239,18 @@ const FamilyPhotos = () => {
                     : "hover:scale-105 opacity-70 hover:opacity-100"
                 }`}
               >
-                <Image src={photo.src || "/placeholder.svg"} alt={photo.alt} fill className="object-cover" />
+                <img
+                  src={getImageSrc(index) || "/placeholder.svg"}
+                  alt={photo.alt}
+                  className="w-full h-full object-cover"
+                  onError={() => handleImageError(index)}
+                />
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Lightbox Modal */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
@@ -271,11 +288,11 @@ const FamilyPhotos = () => {
               className="relative max-w-4xl max-h-[80vh] w-full h-full flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
-                src={photos[modalImage].src || "/placeholder.svg"}
+              <img
+                src={getImageSrc(modalImage) || "/placeholder.svg"}
                 alt={photos[modalImage].alt}
-                fill
-                className="object-contain rounded-lg"
+                className="max-w-full max-h-full object-contain rounded-lg"
+                onError={() => handleImageError(modalImage)}
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white rounded-b-lg">
                 <p className="text-lg font-medium">{photos[modalImage].caption}</p>
