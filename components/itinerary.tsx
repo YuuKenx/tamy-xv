@@ -31,7 +31,7 @@ const Itinerary = () => {
   const events = [
     {
       id: 1,
-      time: "15:00",
+      time: "13:00",
       title: "Ceremonia religiosa de agradecimiento",
       location: "Iglesia San Judas Tadeo",
       address: "166, Carboneras CP 42180 Mineral de la Reforma, Hgo.",
@@ -44,12 +44,12 @@ const Itinerary = () => {
     },
     {
       id: 2,
-      time: "16:00",
-      title: "Recepción y Vals",
-      location: "Rivento",
+      time: "15:30",
+      title: "Recepción en Rivento Salón y Jardín",
+      location: "Rivento  Salón y Jardín",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
       description:
-        "Después de la ceremonia, te espero en Rivento para celebrar juntos este día tan especial. Disfrutaremos de una tarde llena de música, baile y momentos inolvidables.",
+        "Después de la ceremonia, te espero en Rivento Salón y Jardín para celebrar juntos este día tan especial. Disfrutaremos de una tarde llena de música, baile y momentos inolvidables. Recuerda que al ser parte importante de esta celebración es necesario tu participación e integración para construir juntos momento mágicos.",
       mapUrl: "https://maps.google.com",
       icon: <Music className="w-6 h-6" />,
       image: "/elegant-ballroom.png",
@@ -57,11 +57,11 @@ const Itinerary = () => {
     },
     {
       id: 3,
-      time: "22:00",
-      title: "Pastel",
-      location: "Rivento",
+      time: "16:30",
+      title: "Entrada de Tamy",
+      location: "Rivento Salón y Jardín",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
-      description: "Momento especial donde partiremos el pastel y brindaremos por mis XV años. ¡No te lo pierdas!",
+      description: "Demos juntos la bienvenida a nuestra celebrada ¡Tamy! en donde realizará su entrada para comenzar está gran celebración",
       mapUrl: "https://maps.google.com",
       icon: <Cake className="w-6 h-6" />,
       image: "/elegant-quinceanera-cake.png",
@@ -86,7 +86,7 @@ const Itinerary = () => {
         >
           <h2 className="text-3xl md:text-5xl font-bold text-pink-600 mb-4">Itinerario</h2>
           <p className="text-lg text-pink-500 max-w-2xl mx-auto">
-            Acompáñanos en este día tan especial. Hemos preparado una celebración inolvidable para Tamara.
+            Acompáñanos en este día tan especial. Hemos preparado una celebración inolvidable para Tamy.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-pink-300 to-purple-300 mx-auto mt-6"></div>
         </motion.div>
