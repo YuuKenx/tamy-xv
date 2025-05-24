@@ -7,70 +7,89 @@ const FamilyPhotos = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalImage, setModalImage] = useState(0)
+  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({})
 
   // Array con las 10 fotos familiares
   const photos = [
     {
       id: 1,
       src: "/images/familia1.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=familia reunida celebrando",
       alt: "Familia reunida",
       caption: "Momentos especiales en familia",
     },
     {
       id: 2,
       src: "/images/familia2.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=celebración familiar",
       alt: "Celebración familiar",
       caption: "Celebrando juntos",
     },
     {
       id: 3,
       src: "/images/familia3.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=reunión familiar",
       alt: "Reunión familiar",
       caption: "Unidos siempre",
     },
     {
       id: 4,
       src: "/images/familia4.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=momentos en familia",
       alt: "Momentos en familia",
       caption: "Recuerdos inolvidables",
     },
     {
       id: 5,
       src: "/images/familia5.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=familia feliz",
       alt: "Familia feliz",
       caption: "Sonrisas que perduran",
     },
     {
       id: 6,
       src: "/images/familia6.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=tiempo en familia",
       alt: "Tiempo en familia",
       caption: "Amor incondicional",
     },
     {
       id: 7,
       src: "/images/familia7.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=familia unida",
       alt: "Familia unida",
       caption: "Lazos que nos unen",
     },
     {
       id: 8,
       src: "/images/familia8.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=momentos familiares",
       alt: "Momentos familiares",
       caption: "Tesoros del corazón",
     },
     {
       id: 9,
       src: "/images/familia9.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=familia completa",
       alt: "Familia completa",
       caption: "Nuestra historia",
     },
     {
       id: 10,
       src: "/images/familia10.jpg",
+      fallback: "/placeholder.svg?height=400&width=600&query=familia querida",
       alt: "Familia querida",
       caption: "Amor eterno",
     },
   ]
+
+  const handleImageError = (index: number) => {
+    setImageErrors((prev) => ({ ...prev, [index]: true }))
+  }
+
+  const getImageSrc = (index: number) => {
+    return imageErrors[index] ? photos[index].fallback : photos[index].src
+  }
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % photos.length)
@@ -152,9 +171,10 @@ const FamilyPhotos = () => {
                   onClick={() => openModal(currentIndex)}
                 >
                   <img
-                    src={photos[currentIndex].src || "/placeholder.svg"}
+                    src={getImageSrc(currentIndex) || "/placeholder.svg"}
                     alt={photos[currentIndex].alt}
                     className="w-full h-full object-cover"
+                    onError={() => handleImageError(currentIndex)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end p-6">
                     <div className="flex items-center justify-between">
@@ -224,7 +244,12 @@ const FamilyPhotos = () => {
                     : "hover:scale-105 opacity-70 hover:opacity-100"
                 }`}
               >
-                <img src={photo.src || "/placeholder.svg"} alt={photo.alt} className="w-full h-full object-cover" />
+                <img
+                  src={getImageSrc(index) || "/placeholder.svg"}
+                  alt={photo.alt}
+                  className="w-full h-full object-cover"
+                  onError={() => handleImageError(index)}
+                />
               </button>
             ))}
           </div>
@@ -270,9 +295,10 @@ const FamilyPhotos = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src={photos[modalImage].src || "/placeholder.svg"}
+                src={getImageSrc(modalImage) || "/placeholder.svg"}
                 alt={photos[modalImage].alt}
                 className="max-w-full max-h-full object-contain rounded-lg"
+                onError={() => handleImageError(modalImage)}
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white rounded-b-lg">
                 <p className="text-lg font-medium">{photos[modalImage].caption}</p>
