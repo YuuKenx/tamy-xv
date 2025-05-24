@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Clock, MapPin, Calendar, Music, Cake, ChevronDown, ChevronUp } from "lucide-react"
+import Image from "next/image"
 
 const Itinerary = () => {
   const [activeEvent, setActiveEvent] = useState<number | null>(null)
@@ -38,7 +39,7 @@ const Itinerary = () => {
         "Te invito a acompañarme en esta ceremonia especial donde agradeceré a Dios por estos 15 años de vida y recibiré la bendición para esta nueva etapa que comienza.",
       mapUrl: "https://maps.google.com",
       icon: <Calendar className="w-6 h-6" />,
-      image: "/images/iglesia.jpg",
+      image: "/beautiful-church-interior.png",
       color: "from-pink-400 to-pink-600",
     },
     {
@@ -51,7 +52,7 @@ const Itinerary = () => {
         "Después de la ceremonia, te espero en Rivento para celebrar juntos este día tan especial. Disfrutaremos de una tarde llena de música, baile y momentos inolvidables.",
       mapUrl: "https://maps.google.com",
       icon: <Music className="w-6 h-6" />,
-      image: "/images/salon.jpg",
+      image: "/elegant-ballroom.png",
       color: "from-purple-400 to-purple-600",
     },
     {
@@ -63,7 +64,7 @@ const Itinerary = () => {
       description: "Momento especial donde partiremos el pastel y brindaremos por mis XV años. ¡No te lo pierdas!",
       mapUrl: "https://maps.google.com",
       icon: <Cake className="w-6 h-6" />,
-      image: "/images/salon.jpg",
+      image: "/elegant-quinceanera-cake.png",
       color: "from-rose-400 to-rose-600",
     },
   ]
@@ -85,7 +86,7 @@ const Itinerary = () => {
         >
           <h2 className="text-3xl md:text-5xl font-bold text-pink-600 mb-4">Itinerario</h2>
           <p className="text-lg text-pink-500 max-w-2xl mx-auto">
-            Acompáñanos en este día tan especial. Hemos preparado una celebración inolvidable para Tamy.
+            Acompáñanos en este día tan especial. Hemos preparado una celebración inolvidable para Tamara.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-pink-300 to-purple-300 mx-auto mt-6"></div>
         </motion.div>
@@ -108,10 +109,12 @@ const Itinerary = () => {
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
                 <div className={`h-48 relative overflow-hidden`}>
                   <div className="absolute inset-0">
-                    <img
+                    <Image
                       src={event.image || "/placeholder.svg"}
                       alt={event.title}
-                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                      layout="fill"
+                      objectFit="cover"
+                      className="transition-transform duration-700 hover:scale-110"
                     />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
