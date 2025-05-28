@@ -4,7 +4,7 @@ import type React from "react"
 
 import { motion } from "framer-motion"
 import { sendRsvp } from "@/app/actions"
-import { Check, Loader2 } from "lucide-react"
+import { Check, Loader2 } from 'lucide-react'
 
 const RsvpForm = () => {
   const [formState, setFormState] = useState({
@@ -17,6 +17,7 @@ const RsvpForm = () => {
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string>("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -29,8 +30,19 @@ const RsvpForm = () => {
     setError(null)
 
     try {
-      await sendRsvp(formState)
+      const result = await sendRsvp(formState)
       setStatus("success")
+      
+      // Mostrar credenciales generadas
+      if (result.credentials) {
+        setSuccessMessage(`¡Gracias por confirmar! 
+        
+Tu usuario: ${result.credentials.username}
+Tu contraseña: ${result.credentials.password}
+
+Guarda estas credenciales para acceder a la galería de fotos después del evento.`)
+      }
+      
       setFormState({
         name: "",
         email: "",
@@ -67,10 +79,10 @@ const RsvpForm = () => {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Check size={32} className="text-green-600" />
             </div>
-            <h3 className="text-2xl font-bold text-green-700 mb-2">¡Gracias por confirmar!</h3>
-            <p className="text-green-600">
-              Hemos recibido tu confirmación. ¡Esperamos verte en la celebración de XV años de Tamara!
-            </p>
+            <h3 className="text-2xl font-bold text-green-700 mb-4">¡Gracias por confirmar!</h3>
+            <div className="text-green-600 whitespace-pre-line">
+              {successMessage}
+            </div>
           </motion.div>
         ) : (
           <motion.form
