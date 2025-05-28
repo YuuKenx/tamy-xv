@@ -41,7 +41,6 @@ const CountdownModal = ({ targetDate, onClose }: CountdownModalProps) => {
 
   const handleClose = () => {
     setIsOpen(false)
-    // Pequeño delay para permitir que el modal se cierre antes de iniciar música
     setTimeout(() => {
       if (onClose) {
         onClose()
@@ -64,9 +63,14 @@ const CountdownModal = ({ targetDate, onClose }: CountdownModalProps) => {
           <X size={20} className="md:w-6 md:h-6" />
         </button>
 
+        {/* Logo */}
+        <div className="flex justify-center mb-4 md:mb-6">
+          <img src="/image/logo.png" alt="Logo Tamy XV Años" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+        </div>
+
         <h2 className="text-xl md:text-2xl font-bold text-center text-pink-600 mb-3 md:mb-4">Cuenta regresiva</h2>
         <p className="text-center text-gray-600 mb-4 md:mb-6 text-sm md:text-base px-2">
-          ¡Faltan pocos días para celebrar los XV años de Tamara!
+          ¡Faltan pocos días para celebrar los XV años de Tamy!
         </p>
 
         <div className="grid grid-cols-4 gap-1 md:gap-2 text-center">
