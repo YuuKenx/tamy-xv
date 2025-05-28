@@ -1,8 +1,8 @@
 "use client"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { createSupabaseClient } from "@/lib/supabase"
-import { Check, X, Eye, Trash2, Users, ImageIcon, ArrowLeft } from 'lucide-react'
+import { createClient } from "@/lib/supabase"
+import { Check, X, Trash2, ImageIcon, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
 export default function AdminDashboard() {
@@ -11,18 +11,18 @@ export default function AdminDashboard() {
   const [pendingPhotos, setPendingPhotos] = useState<any[]>([])
   const [allPhotos, setAllPhotos] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
-  const [activeTab, setActiveTab] = useState<'pending' | 'all' | 'users'>('pending')
+  const [activeTab, setActiveTab] = useState<"pending" | "all" | "users">("pending")
   const router = useRouter()
 
   useEffect(() => {
     const checkAuth = () => {
-      const sessionToken = localStorage.getItem('session_token')
-      const userType = localStorage.getItem('user_type')
-      const userName = localStorage.getItem('user_name')
-      const userId = localStorage.getItem('user_id')
+      const sessionToken = localStorage.getItem("session_token")
+      const userType = localStorage.getItem("user_type")
+      const userName = localStorage.getItem("user_name")
+      const userId = localStorage.getItem("user_id")
 
-      if (!sessionToken || !['host', 'super_admin'].includes(userType || '')) {
-        router.push('/login')
+      if (!sessionToken || !["host", "super_admin"].includes(userType || "")) {
+        router.push("/login")
         return
       }
 
@@ -36,102 +36,97 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     try {
-      const supabase = createSupabaseClient()
-      
+      const supabase = createClient()
+
       // Cargar fotos pendientes
       const { data: pending } = await supabase
-        .from('photos')
+        .from("photos")
         .select(`
           *,
           users!inner(name, email)
         `)
-        .eq('status', 'pending')
-        .order('uploaded_at', { ascending: false })
+        .eq("status", "pending")
+        .order("uploaded_at", { ascending: false })
 
       setPendingPhotos(pending || [])
 
       // Cargar todas las fotos
       const { data: all } = await supabase
-        .from('photos')
+        .from("photos")
         .select(`
           *,
           users!inner(name, email)
         `)
-        .order('uploaded_at', { ascending: false })
+        .order("uploaded_at", { ascending: false })
 
       setAllPhotos(all || [])
 
       // Cargar usuarios
-      const { data: usersData } = await supabase
-        .from('users')
-        .select('*')
-        .order('created_at', { ascending: false })
+      const { data: usersData } = await supabase.from("users").select("*").order("created_at", { ascending: false })
 
       setUsers(usersData || [])
     } catch (error) {
-      console.error('Error al cargar datos:', error)
+      console.error("Error al cargar datos:", error)
     }
   }
 
-  const handlePhotoAction = async (photoId: string, action: 'approved' | 'rejected') => {
+  const handlePhotoAction = async (photoId: string, action: "approved" | "rejected") => {
     try {
-      const supabase = createSupabaseClient()
-      
+      const supabase = createClient()
+
       const { error } = await supabase
-        .from('photos')
+        .from("photos")
         .update({
           status: action,
           reviewed_at: new Date().toISOString(),
-          reviewed_by: user.id
+          reviewed_by: user.id,
         })
-        .eq('id', photoId)
+        .eq("id", photoId)
 
       if (error) throw error
 
       // Recargar datos
       await loadData()
-      
-      alert(`Foto ${action === 'approved' ? 'aprobada' : 'rechazada'} exitosamente`)
+
+      alert(`Foto ${action === "approved" ? "aprobada" : "rechazada"} exitosamente`)
     } catch (error) {
-      console.error('Error al actualizar foto:', error)
-      alert('Error al procesar la acción')
+      console.error("Error al actualizar foto:", error)
+      alert("Error al procesar la acción")
     }
   }
 
   const handleDeletePhoto = async (photoId: string, filePath: string) => {
-    if (!confirm('¿Estás seguro de eliminar esta foto permanentemente?')) return
+    if (!confirm("¿Estás seguro de eliminar esta foto permanentemente?")) return
 
     try {
-      const supabase = createSupabaseClient()
-      
+      const supabase = createClient()
+
       // Eliminar archivo del storage
-      const { error: storageError } = await supabase.storage
-        .from('event-photos')
-        .remove([filePath])
+      const { error: storageError } = await supabase.storage.from("event-photos").remove([filePath])
 
       if (storageError) throw storageError
 
       // Eliminar registro de la base de datos
-      const { error: dbError } = await supabase
-        .from('photos')
-        .delete()
-        .eq('id', photoId)
+      const { error: dbError } = await supabase.from("photos").delete().eq("id", photoId)
 
       if (dbError) throw dbError
 
       await loadData()
-      alert('Foto eliminada exitosamente')
+      alert("Foto eliminada exitosamente")
     } catch (error) {
-      console.error('Error al eliminar foto:', error)
-      alert('Error al eliminar la foto')
+      console.error("Error al eliminar foto:", error)
+      alert("Error al eliminar la foto")
     }
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'approved': return 'text-green-600 bg-green-100'
-      case 'rejected': return 'text-red-600 bg-red-100'
-      default: return 'text-yellow-600 bg-yellow-100'
+      case "approved":
+        return "text-green-600 bg-green-100"
+      case "rejected":
+        return "text-red-600 bg-red-100"
+      default:
+        return "text-yellow-600 bg-yellow-100"
     }
   }
 
@@ -151,11 +146,11 @@ export default function AdminDashboard() {
             <ArrowLeft size={20} className="mr-1" />
             <span>Volver al sitio</span>
           </Link>
-          
+
           <button
             onClick={() => {
               localStorage.clear()
-              router.push('/')
+              router.push("/")
             }}
             className="text-gray-600 hover:text-gray-700"
           >
@@ -170,31 +165,25 @@ export default function AdminDashboard() {
           {/* Tabs */}
           <div className="flex space-x-1 mb-8 bg-gray-100 p-1 rounded-lg">
             <button
-              onClick={() => setActiveTab('pending')}
+              onClick={() => setActiveTab("pending")}
               className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-                activeTab === 'pending' 
-                  ? 'bg-white text-pink-600 shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-800'
+                activeTab === "pending" ? "bg-white text-pink-600 shadow-sm" : "text-gray-600 hover:text-gray-800"
               }`}
             >
               Fotos Pendientes ({pendingPhotos.length})
             </button>
             <button
-              onClick={() => setActiveTab('all')}
+              onClick={() => setActiveTab("all")}
               className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-                activeTab === 'all' 
-                  ? 'bg-white text-pink-600 shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-800'
+                activeTab === "all" ? "bg-white text-pink-600 shadow-sm" : "text-gray-600 hover:text-gray-800"
               }`}
             >
               Todas las Fotos ({allPhotos.length})
             </button>
             <button
-              onClick={() => setActiveTab('users')}
+              onClick={() => setActiveTab("users")}
               className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-                activeTab === 'users' 
-                  ? 'bg-white text-pink-600 shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-800'
+                activeTab === "users" ? "bg-white text-pink-600 shadow-sm" : "text-gray-600 hover:text-gray-800"
               }`}
             >
               Usuarios ({users.length})
@@ -202,7 +191,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Contenido de tabs */}
-          {activeTab === 'pending' && (
+          {activeTab === "pending" && (
             <div>
               <h2 className="text-xl font-semibold mb-4">Fotos Pendientes de Aprobación</h2>
               {pendingPhotos.length === 0 ? (
@@ -219,21 +208,19 @@ export default function AdminDashboard() {
                       </div>
                       <div className="p-4">
                         <p className="font-medium text-gray-800">{photo.users.name}</p>
-                        <p className="text-sm text-gray-600 mb-2">{photo.caption || 'Sin descripción'}</p>
-                        <p className="text-xs text-gray-500 mb-3">
-                          {new Date(photo.uploaded_at).toLocaleDateString()}
-                        </p>
-                        
+                        <p className="text-sm text-gray-600 mb-2">{photo.caption || "Sin descripción"}</p>
+                        <p className="text-xs text-gray-500 mb-3">{new Date(photo.uploaded_at).toLocaleDateString()}</p>
+
                         <div className="flex space-x-2">
                           <button
-                            onClick={() => handlePhotoAction(photo.id, 'approved')}
+                            onClick={() => handlePhotoAction(photo.id, "approved")}
                             className="flex-1 bg-green-600 text-white py-2 px-3 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center"
                           >
                             <Check size={16} className="mr-1" />
                             Aprobar
                           </button>
                           <button
-                            onClick={() => handlePhotoAction(photo.id, 'rejected')}
+                            onClick={() => handlePhotoAction(photo.id, "rejected")}
                             className="flex-1 bg-red-600 text-white py-2 px-3 rounded-md hover:bg-red-700 transition-colors flex items-center justify-center"
                           >
                             <X size={16} className="mr-1" />
@@ -248,7 +235,7 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {activeTab === 'all' && (
+          {activeTab === "all" && (
             <div>
               <h2 className="text-xl font-semibold mb-4">Todas las Fotos</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -259,27 +246,31 @@ export default function AdminDashboard() {
                     </div>
                     <div className="p-4">
                       <p className="font-medium text-gray-800">{photo.users.name}</p>
-                      <p className="text-sm text-gray-600 mb-2">{photo.caption || 'Sin descripción'}</p>
+                      <p className="text-sm text-gray-600 mb-2">{photo.caption || "Sin descripción"}</p>
                       <div className="flex items-center justify-between mb-3">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(photo.status)}`}>
-                          {photo.status === 'approved' ? 'Aprobada' : photo.status === 'rejected' ? 'Rechazada' : 'Pendiente'}
+                          {photo.status === "approved"
+                            ? "Aprobada"
+                            : photo.status === "rejected"
+                              ? "Rechazada"
+                              : "Pendiente"}
                         </span>
                         <span className="text-xs text-gray-500">
                           {new Date(photo.uploaded_at).toLocaleDateString()}
                         </span>
                       </div>
-                      
+
                       <div className="flex space-x-2">
-                        {photo.status === 'pending' && (
+                        {photo.status === "pending" && (
                           <>
                             <button
-                              onClick={() => handlePhotoAction(photo.id, 'approved')}
+                              onClick={() => handlePhotoAction(photo.id, "approved")}
                               className="flex-1 bg-green-600 text-white py-1 px-2 rounded text-sm hover:bg-green-700 transition-colors"
                             >
                               Aprobar
                             </button>
                             <button
-                              onClick={() => handlePhotoAction(photo.id, 'rejected')}
+                              onClick={() => handlePhotoAction(photo.id, "rejected")}
                               className="flex-1 bg-red-600 text-white py-1 px-2 rounded text-sm hover:bg-red-700 transition-colors"
                             >
                               Rechazar
@@ -300,7 +291,7 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {activeTab === 'users' && (
+          {activeTab === "users" && (
             <div>
               <h2 className="text-xl font-semibold mb-4">Usuarios Registrados</h2>
               <div className="overflow-x-auto">
@@ -321,13 +312,20 @@ export default function AdminDashboard() {
                         <td className="border border-gray-300 px-4 py-2">{user.email}</td>
                         <td className="border border-gray-300 px-4 py-2">{user.username}</td>
                         <td className="border border-gray-300 px-4 py-2">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            user.user_type === 'super_admin' ? 'bg-purple-100 text-purple-600' :
-                            user.user_type === 'host' ? 'bg-blue-100 text-blue-600' :
-                            'bg-gray-100 text-gray-600'
-                          }`}>
-                            {user.user_type === 'super_admin' ? 'Super Admin' :
-                             user.user_type === 'host' ? 'Anfitrión' : 'Invitado'}
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              user.user_type === "super_admin"
+                                ? "bg-purple-100 text-purple-600"
+                                : user.user_type === "host"
+                                  ? "bg-blue-100 text-blue-600"
+                                  : "bg-gray-100 text-gray-600"
+                            }`}
+                          >
+                            {user.user_type === "super_admin"
+                              ? "Super Admin"
+                              : user.user_type === "host"
+                                ? "Anfitrión"
+                                : "Invitado"}
                           </span>
                         </td>
                         <td className="border border-gray-300 px-4 py-2">
