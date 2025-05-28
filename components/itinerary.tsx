@@ -38,7 +38,7 @@ const Itinerary = () => {
         "Te invito a acompañarme en esta ceremonia especial donde agradeceré a Dios por estos 15 años de vida y recibiré la bendición para esta nueva etapa que comienza.",
       mapUrl: "https://maps.google.com",
       icon: <Calendar className="w-6 h-6" />,
-      image: "/image/iglesia.jpg",
+      image: "/beautiful-church-interior.png",
       color: "from-pink-400 to-pink-600",
     },
     {
@@ -51,7 +51,7 @@ const Itinerary = () => {
         "Después de la ceremonia, te espero en Rivento para celebrar juntos este día tan especial. Disfrutaremos de una tarde llena de música, baile y momentos inolvidables.",
       mapUrl: "https://maps.google.com",
       icon: <Music className="w-6 h-6" />,
-      image: "/image/salon.jpg",
+      image: "/elegant-ballroom.png",
       color: "from-purple-400 to-purple-600",
     },
     {
@@ -63,7 +63,7 @@ const Itinerary = () => {
       description: "Momento especial donde partiremos el pastel y brindaremos por mis XV años. ¡No te lo pierdas!",
       mapUrl: "https://maps.google.com",
       icon: <Cake className="w-6 h-6" />,
-      image: "/image/salon.jpg",
+      image: "/elegant-ballroom.png",
       color: "from-rose-400 to-rose-600",
     },
   ]

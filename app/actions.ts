@@ -1,6 +1,7 @@
 "use server"
 
 import { createServerSupabaseClient } from "@/lib/supabase"
+import { revalidatePath } from "next/cache"
 
 interface RsvpData {
   name: string
@@ -14,99 +15,76 @@ export async function sendRsvp(data: RsvpData) {
   try {
     const supabase = createServerSupabaseClient()
 
-    // 1. Generar username y contraseña únicos
-    const { data: username, error: usernameError } = await supabase
-      .rpc('generate_unique_username', { full_name: data.name })
+    // 1. Generar username único
+    const baseUsername = data.name
+      .split(" ")[0]
+      .toLowerCase()
+      .replace(/[^a-z]/g, "")
+    let username = baseUsername
+    let counter = 1
 
-    if (usernameError) {
-      throw new Error('Error al generar username')
+    // Verificar si el username ya existe
+    while (true) {
+      const { data: existingUser } = await supabase.from("users").select("id").eq("username", username).single()
+
+      if (!existingUser) break
+      username = `${baseUsername}${counter}`
+      counter++
     }
 
-    const { data: password, error: passwordError } = await supabase
-      .rpc('generate_easy_password', { full_name: data.name })
+    // 2. Generar contraseña fácil (nombre + 4 números)
+    const firstName = data.name.split(" ")[0]
+    const capitalizedName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
+    const randomNumbers = Math.floor(Math.random() * 9999)
+      .toString()
+      .padStart(4, "0")
+    const password = `${capitalizedName}${randomNumbers}`
 
-    if (passwordError) {
-      throw new Error('Error al generar contraseña')
+    // 3. Crear usuario invitado
+    const { data: userId, error: userError } = await supabase.rpc("create_user_with_password", {
+      p_email: data.email,
+      p_name: data.name,
+      p_phone: data.phone || null,
+      p_user_type: "guest",
+      p_username: username,
+      p_password: password,
+    })
+
+    if (userError) {
+      console.error("Error al crear usuario:", userError)
+      throw new Error("Error al crear usuario")
     }
 
-    // 2. Crear usuario invitado
-    const { data: newUser, error: userError } = await supabase
-      .from('users')
-      .insert({
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        user_type: 'guest',
-        username: username,
-        password_hash: `crypt('${password}', gen_salt('bf'))` // Esto no funcionará así, necesitamos usar SQL
-      })
-      .select()
-      .single()
-
-    // Mejor manera: usar SQL directo para insertar con contraseña encriptada
-    const { data: userResult, error: insertError } = await supabase
-      .from('users')
-      .insert({
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        user_type: 'guest',
-        username: username,
-        password_hash: 'temp' // Temporal
-      })
-      .select()
-      .single()
-
-    if (insertError) {
-      throw new Error('Error al crear usuario')
-    }
-
-    // Actualizar con contraseña encriptada usando SQL
-    const { error: updateError } = await supabase
-      .rpc('update_user_password', {
-        user_id: userResult.id,
-        new_password: password
-      })
-
-    // 3. Crear confirmación RSVP
-    const { error: rsvpError } = await supabase
-      .from('rsvp_confirmations')
-      .insert({
-        user_id: userResult.id,
-        guests_count: parseInt(data.guests),
-        message: data.message
-      })
+    // 4. Crear confirmación RSVP
+    const { error: rsvpError } = await supabase.from("rsvp_confirmations").insert({
+      user_id: userId,
+      guests_count: Number.parseInt(data.guests),
+      message: data.message || null,
+    })
 
     if (rsvpError) {
-      throw new Error('Error al guardar confirmación')
+      console.error("Error al guardar confirmación:", rsvpError)
+      throw new Error("Error al guardar confirmación")
     }
 
-    // 4. Registrar actividad
-    await supabase
-      .from('activity_logs')
-      .insert({
-        user_id: userResult.id,
-        action: 'RSVP_CONFIRMED',
-        details: {
-          guests_count: parseInt(data.guests),
-          message: data.message
-        }
-      })
+    // 5. Registrar actividad
+    await supabase.from("activity_logs").insert({
+      user_id: userId,
+      action: "RSVP_CONFIRMED",
+      details: {
+        guests_count: Number.parseInt(data.guests),
+      },
+    })
 
-    // 5. Aquí enviarías el email con las credenciales
-    // Por ahora solo simulamos el envío
-    console.log(`Email enviado a ${data.email}:`)
-    console.log(`Usuario: ${username}`)
-    console.log(`Contraseña: ${password}`)
+    revalidatePath("/")
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       credentials: { username, password },
-      message: `¡Gracias ${data.name}! Te hemos enviado tus credenciales de acceso por email.`
+      message: `¡Gracias ${data.name}! Te hemos enviado tus credenciales de acceso.`,
     }
-
   } catch (error) {
-    console.error('Error en RSVP:', error)
-    throw new Error('Error al procesar confirmación')
+    console.error("Error en RSVP:", error)
+    throw new Error("Error al procesar confirmación. Por favor intenta de nuevo.")
   }
 }
