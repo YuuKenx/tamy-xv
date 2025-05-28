@@ -6,32 +6,31 @@ import { Play, Pause, Volume2, VolumeX } from "lucide-react"
 
 export interface MusicPlayerRef {
   startMusic: () => void
+  pauseMusic: () => void
+  resumeMusic: () => void
 }
 
 const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
-  const [volume, setVolume] = useState(0.5)
+  const [volume, setVolume] = useState(0.3)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [wasPlayingBeforeVideo, setWasPlayingBeforeVideo] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
-    // Crear el elemento de audio
     audioRef.current = new Audio("/music/musica.mp3")
 
-    // Configurar propiedades
     if (audioRef.current) {
       audioRef.current.loop = true
       audioRef.current.volume = volume
       audioRef.current.preload = "auto"
 
-      // Evento para detectar cuando la música está cargada
       audioRef.current.addEventListener("canplaythrough", () => {
         setIsLoaded(true)
       })
     }
 
-    // Limpiar al desmontar
     return () => {
       if (audioRef.current) {
         audioRef.current.pause()
@@ -41,14 +40,37 @@ const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
     }
   }, [])
 
-  // Exponer la función startMusic al componente padre
   useImperativeHandle(ref, () => ({
     startMusic: () => {
       if (audioRef.current && isLoaded && !isPlaying) {
+        // En móviles, necesitamos interacción del usuario
+        const playPromise = audioRef.current.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true)
+            })
+            .catch((error) => {
+              console.log("Autoplay prevented:", error)
+              // En móviles, mostrar el botón de play
+            })
+        }
+      }
+    },
+    pauseMusic: () => {
+      if (audioRef.current && isPlaying) {
+        setWasPlayingBeforeVideo(true)
+        audioRef.current.pause()
+        setIsPlaying(false)
+      }
+    },
+    resumeMusic: () => {
+      if (audioRef.current && wasPlayingBeforeVideo) {
         audioRef.current.play().catch((error) => {
-          console.error("Error playing audio:", error)
+          console.error("Error resuming audio:", error)
         })
         setIsPlaying(true)
+        setWasPlayingBeforeVideo(false)
       }
     },
   }))
@@ -93,14 +115,18 @@ const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-3 flex items-center gap-3">
+    <div className="fixed bottom-4 right-4 z-50 bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-2 md:p-3 flex items-center gap-2 md:gap-3">
       <button
         onClick={togglePlay}
-        className="w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
+        className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-pink-500 flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
         aria-label={isPlaying ? "Pausar música" : "Reproducir música"}
         disabled={!isLoaded}
       >
-        {isPlaying ? <Pause size={18} /> : <Play size={18} className="ml-1" />}
+        {isPlaying ? (
+          <Pause size={14} className="md:w-[18px] md:h-[18px]" />
+        ) : (
+          <Play size={14} className="ml-0.5 md:w-[18px] md:h-[18px] md:ml-1" />
+        )}
       </button>
 
       <div className="hidden sm:flex items-center gap-2">
@@ -110,7 +136,11 @@ const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
           aria-label={isMuted ? "Activar sonido" : "Silenciar"}
           disabled={!isLoaded}
         >
-          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+          {isMuted ? (
+            <VolumeX size={16} className="md:w-[18px] md:h-[18px]" />
+          ) : (
+            <Volume2 size={16} className="md:w-[18px] md:h-[18px]" />
+          )}
         </button>
 
         <input
@@ -120,14 +150,14 @@ const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
           step="0.01"
           value={volume}
           onChange={handleVolumeChange}
-          className="w-20 accent-pink-500"
+          className="w-16 md:w-20 accent-pink-500"
           aria-label="Volumen"
           disabled={!isLoaded}
         />
       </div>
 
-      <div className="text-xs text-pink-600 hidden sm:block">
-        {!isLoaded ? "Cargando música..." : isPlaying ? "♪ Música de XV años" : "Música"}
+      <div className="text-xs text-pink-600 hidden lg:block">
+        {!isLoaded ? "Cargando..." : isPlaying ? "♪ Música" : "Música"}
       </div>
     </div>
   )

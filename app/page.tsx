@@ -25,9 +25,20 @@ export default function Home() {
   const musicPlayerRef = useRef<MusicPlayerRef>(null)
 
   const handleCountdownClose = () => {
-    // Iniciar la música cuando se cierre el modal
     if (musicPlayerRef.current) {
       musicPlayerRef.current.startMusic()
+    }
+  }
+
+  const handleVideoPlay = () => {
+    if (musicPlayerRef.current) {
+      musicPlayerRef.current.pauseMusic()
+    }
+  }
+
+  const handleVideoEnd = () => {
+    if (musicPlayerRef.current) {
+      musicPlayerRef.current.resumeMusic()
     }
   }
 
@@ -40,7 +51,7 @@ export default function Home() {
       <CountdownModal targetDate="2025-08-09" onClose={handleCountdownClose} />
       <MusicPlayer ref={musicPlayerRef} />
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
+      <div className="container mx-auto px-4 py-4 md:py-8 relative z-10">
         <CoverSection name="Tamy" />
 
         <CountdownSection />
@@ -49,7 +60,7 @@ export default function Home() {
 
         <QuinceaneraMesage />
 
-        <GodmotherVideo />
+        <GodmotherVideo onVideoPlay={handleVideoPlay} onVideoEnd={handleVideoEnd} />
 
         <Itinerary />
 
@@ -59,9 +70,9 @@ export default function Home() {
 
         <GiftRegistry />
 
-        <footer className="text-center py-8 text-pink-700 mt-16">
-          <p>Con cariño esperamos tu presencia en este día tan especial</p>
-          <p className="mt-2 text-sm">© {new Date().getFullYear()} - XV Años de Tamara</p>
+        <footer className="text-center py-6 md:py-8 text-pink-700 mt-8 md:mt-16">
+          <p className="text-sm md:text-base">Con cariño esperamos tu presencia en este día tan especial</p>
+          <p className="mt-2 text-xs md:text-sm">© {new Date().getFullYear()} - XV Años de Tamara</p>
         </footer>
       </div>
     </main>

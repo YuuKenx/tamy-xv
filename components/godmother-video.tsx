@@ -3,7 +3,12 @@ import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Play } from "lucide-react"
 
-const GodmotherVideo = () => {
+interface GodmotherVideoProps {
+  onVideoPlay?: () => void
+  onVideoEnd?: () => void
+}
+
+const GodmotherVideo = ({ onVideoPlay, onVideoEnd }: GodmotherVideoProps) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -41,10 +46,24 @@ const GodmotherVideo = () => {
     }
   }
 
+  const handleVideoPlay = () => {
+    setIsPlaying(true)
+    if (onVideoPlay) {
+      onVideoPlay()
+    }
+  }
+
+  const handleVideoPause = () => {
+    setIsPlaying(false)
+  }
+
   const handleVideoEnd = () => {
     setIsPlaying(false)
     if (videoRef.current) {
       videoRef.current.currentTime = 0
+    }
+    if (onVideoEnd) {
+      onVideoEnd()
     }
   }
 
@@ -53,13 +72,16 @@ const GodmotherVideo = () => {
   }
 
   return (
-    <section ref={sectionRef} className="py-20 bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl my-16">
+    <section
+      ref={sectionRef}
+      className="py-10 md:py-20 bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl my-8 md:my-16"
+    >
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8 }}
-          className="text-3xl md:text-4xl font-bold text-center text-pink-600 mb-12"
+          className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-pink-600 mb-8 md:mb-12"
         >
           Video de la Madrina
         </motion.h2>
@@ -70,11 +92,10 @@ const GodmotherVideo = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative rounded-xl overflow-hidden shadow-xl bg-black aspect-video"
         >
-          {/* Fallback image while video loads */}
           {!isLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-pink-900/20">
               <div className="text-white text-center p-4">
-                <p className="mb-4">Video de la madrina recibiendo la invitación</p>
+                <p className="mb-4 text-sm md:text-base">Video de la madrina recibiendo la invitación</p>
               </div>
             </div>
           )}
@@ -82,8 +103,8 @@ const GodmotherVideo = () => {
           <video
             ref={videoRef}
             className="w-full h-full object-contain"
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
+            onPlay={handleVideoPlay}
+            onPause={handleVideoPause}
             onEnded={handleVideoEnd}
             onLoadedData={handleLoadedData}
             playsInline
@@ -96,17 +117,16 @@ const GodmotherVideo = () => {
             Tu navegador no soporta videos HTML5.
           </video>
 
-          {/* Play button overlay */}
           {!isPlaying && (
             <div
               className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer"
               onClick={togglePlay}
             >
               <button
-                className="w-20 h-20 rounded-full bg-pink-600/90 flex items-center justify-center hover:bg-pink-700 transition-colors"
+                className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-pink-600/90 flex items-center justify-center hover:bg-pink-700 transition-colors"
                 aria-label="Reproducir video"
               >
-                <Play size={36} className="text-white ml-2" />
+                <Play size={24} className="text-white ml-1 md:w-9 md:h-9" />
               </button>
             </div>
           )}
@@ -116,9 +136,9 @@ const GodmotherVideo = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-8 text-center"
+          className="mt-6 md:mt-8 text-center"
         >
-          <p className="text-lg text-pink-700">
+          <p className="text-sm md:text-lg text-pink-700 px-4">
             Un mensaje especial de Mariana, quien con mucho cariño acompaña a Tamy en este día tan importante.
           </p>
         </motion.div>

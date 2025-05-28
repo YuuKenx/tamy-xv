@@ -8,7 +8,6 @@ const FamilyPhotos = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalImage, setModalImage] = useState(0)
 
-  // TUS RUTAS REALES - CORREGIDAS para usar /image/ en lugar de /images/
   const photos = [
     {
       id: 1,
@@ -143,14 +142,14 @@ const FamilyPhotos = () => {
   }, [currentIndex, isModalOpen])
 
   return (
-    <section className="py-20 bg-pink-50 rounded-3xl my-16">
+    <section className="py-10 md:py-20 bg-pink-50 rounded-3xl my-8 md:my-16">
       <div className="container mx-auto px-4">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-bold text-center text-pink-600 mb-12"
+          className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-pink-600 mb-8 md:mb-12"
         >
           Nuestra Familia
         </motion.h2>
@@ -171,14 +170,14 @@ const FamilyPhotos = () => {
                   <img
                     src={getImageSrc(currentIndex) || "/placeholder.svg"}
                     alt={photos[currentIndex].alt}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain bg-pink-50"
                     onError={() => handleImageError(currentIndex)}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end p-6">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end p-4 md:p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-white text-lg font-medium">{photos[currentIndex].caption}</p>
-                        <p className="text-white/80 text-sm">
+                        <p className="text-white text-sm md:text-lg font-medium">{photos[currentIndex].caption}</p>
+                        <p className="text-white/80 text-xs md:text-sm">
                           {currentIndex + 1} de {photos.length}
                         </p>
                       </div>
@@ -190,7 +189,7 @@ const FamilyPhotos = () => {
                         className="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors"
                         aria-label="Ver imagen completa"
                       >
-                        <Maximize2 size={20} className="text-white" />
+                        <Maximize2 size={16} className="text-white md:w-5 md:h-5" />
                       </button>
                     </div>
                   </div>
@@ -201,26 +200,26 @@ const FamilyPhotos = () => {
 
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-3 rounded-full shadow-md z-10 transition-colors"
+            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-2 md:p-3 rounded-full shadow-md z-10 transition-colors"
             aria-label="Foto anterior"
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={20} className="md:w-6 md:h-6" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-3 rounded-full shadow-md z-10 transition-colors"
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-2 md:p-3 rounded-full shadow-md z-10 transition-colors"
             aria-label="Siguiente foto"
           >
-            <ChevronRight size={24} />
+            <ChevronRight size={20} className="md:w-6 md:h-6" />
           </button>
 
-          <div className="flex justify-center mt-6 gap-2">
+          <div className="flex justify-center mt-4 md:mt-6 gap-1 md:gap-2">
             {photos.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-colors ${
+                className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-colors ${
                   index === currentIndex ? "bg-pink-600" : "bg-pink-300"
                 }`}
                 aria-label={`Ir a la foto ${index + 1}`}
@@ -228,7 +227,7 @@ const FamilyPhotos = () => {
             ))}
           </div>
 
-          <div className="mt-8 grid grid-cols-5 md:grid-cols-10 gap-2">
+          <div className="mt-6 md:mt-8 grid grid-cols-5 md:grid-cols-10 gap-1 md:gap-2">
             {photos.map((photo, index) => (
               <button
                 key={photo.id}
@@ -265,7 +264,7 @@ const FamilyPhotos = () => {
               onClick={closeModal}
               aria-label="Cerrar galería"
             >
-              <X size={32} />
+              <X size={24} className="md:w-8 md:h-8" />
             </button>
 
             <button
@@ -273,10 +272,10 @@ const FamilyPhotos = () => {
                 e.stopPropagation()
                 prevModalImage()
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full z-10"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 md:p-3 rounded-full z-10"
               aria-label="Imagen anterior"
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft size={20} className="md:w-6 md:h-6" />
             </button>
 
             <motion.div
@@ -294,9 +293,9 @@ const FamilyPhotos = () => {
                 className="max-w-full max-h-full object-contain rounded-lg"
                 onError={() => handleImageError(modalImage)}
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white rounded-b-lg">
-                <p className="text-lg font-medium">{photos[modalImage].caption}</p>
-                <p className="text-sm opacity-80">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 md:p-6 text-white rounded-b-lg">
+                <p className="text-sm md:text-lg font-medium">{photos[modalImage].caption}</p>
+                <p className="text-xs md:text-sm opacity-80">
                   {modalImage + 1} de {photos.length}
                 </p>
               </div>
@@ -307,10 +306,10 @@ const FamilyPhotos = () => {
                 e.stopPropagation()
                 nextModalImage()
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 md:p-3 rounded-full z-10"
               aria-label="Siguiente imagen"
             >
-              <ChevronRight size={24} />
+              <ChevronRight size={20} className="md:w-6 md:h-6" />
             </button>
           </motion.div>
         )}
