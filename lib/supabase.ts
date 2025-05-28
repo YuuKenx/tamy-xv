@@ -1,31 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
-import { Database } from './database.types'
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
+import type { Database } from "./database.types"
 
-// Crear un singleton para el cliente de Supabase
-let supabaseInstance: ReturnType<typeof createClient> | null = null
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export const createSupabaseClient = () => {
-  if (supabaseInstance) return supabaseInstance
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Faltan las variables de entorno de Supabase')
-  }
-
-  supabaseInstance = createClient<Database>(supabaseUrl, supabaseAnonKey)
-  return supabaseInstance
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error("Missing Supabase environment variables")
 }
 
-// Cliente para el lado del servidor
-export const createServerSupabaseClient = () => {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+export function createClient() {
+  return createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey)
+}
 
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Faltan las variables de entorno de Supabase para el servidor')
+// Cliente para el lado del servidor con service role key
+export function createServerClient() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
+  if (!serviceRoleKey) {
+    throw new Error("Missing Supabase service role key")
   }
 
-  return createClient<Database>(supabaseUrl, supabaseServiceKey)
+  return createSupabaseClient<Database>(supabaseUrl, serviceRoleKey)
 }
