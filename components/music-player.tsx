@@ -41,19 +41,14 @@ const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
   }, [])
 
   useImperativeHandle(ref, () => ({
-    startMusic: () => {
+    startMusic: async () => {
       if (audioRef.current && isLoaded && !isPlaying) {
-        // En móviles, necesitamos interacción del usuario
-        const playPromise = audioRef.current.play()
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setIsPlaying(true)
-            })
-            .catch((error) => {
-              console.log("Autoplay prevented:", error)
-              // En móviles, mostrar el botón de play
-            })
+        try {
+          await audioRef.current.play()
+          setIsPlaying(true)
+        } catch (error) {
+          console.log("Autoplay prevented:", error)
+          // En móviles, el usuario necesita interactuar primero
         }
       }
     },
@@ -98,8 +93,32 @@ const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
     }
   }, [isMuted, volume])
 
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying)
+  const togglePlay = async () => {
+    if (!audioRef.current || !isLoaded) return
+
+    try {
+      if (isPlaying) {
+        audioRef.current.pause()
+        setIsPlaying(false)
+      } else {
+        // En móviles, asegurar que el audio esté listo
+        audioRef.current.load()
+        await audioRef.current.play()
+        setIsPlaying(true)
+      }
+    } catch (error) {
+      console.error("Error toggling audio:", error)
+      // Si falla, intentar una vez más
+      try {
+        if (!isPlaying) {
+          await audioRef.current.play()
+          setIsPlaying(true)
+        }
+      } catch (secondError) {
+        console.error("Second attempt failed:", secondError)
+        alert("No se pudo reproducir la música. Intenta tocar el botón nuevamente.")
+      }
+    }
   }
 
   const toggleMute = () => {
@@ -115,17 +134,17 @@ const MusicPlayer = forwardRef<MusicPlayerRef>((props, ref) => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-2 md:p-3 flex items-center gap-2 md:gap-3">
+    <div className="fixed bottom-4 right-4 z-50 bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-3 md:p-3 flex items-center gap-2 md:gap-3">
       <button
         onClick={togglePlay}
-        className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-pink-500 flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
+        className="w-12 h-12 md:w-10 md:h-10 rounded-full bg-pink-500 flex items-center justify-center text-white hover:bg-pink-600 transition-colors touch-manipulation"
         aria-label={isPlaying ? "Pausar música" : "Reproducir música"}
         disabled={!isLoaded}
       >
         {isPlaying ? (
-          <Pause size={14} className="md:w-[18px] md:h-[18px]" />
+          <Pause size={18} className="md:w-[18px] md:h-[18px]" />
         ) : (
-          <Play size={14} className="ml-0.5 md:w-[18px] md:h-[18px] md:ml-1" />
+          <Play size={18} className="ml-1 md:w-[18px] md:h-[18px] md:ml-1" />
         )}
       </button>
 

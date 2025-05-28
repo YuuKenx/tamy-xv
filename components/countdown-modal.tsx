@@ -65,7 +65,7 @@ const CountdownModal = ({ targetDate, onClose }: CountdownModalProps) => {
 
         {/* Logo */}
         <div className="flex justify-center mb-4 md:mb-6">
-          <img src="/image/logo.png" alt="Logo Tamy XV Años" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+          <img src="/image/logo.png" alt="Logo Tamy XV Años" className="w-20 h-20 md:w-24 md:h-24 object-contain" />
         </div>
 
         <h2 className="text-xl md:text-2xl font-bold text-center text-pink-600 mb-3 md:mb-4">Cuenta regresiva</h2>
