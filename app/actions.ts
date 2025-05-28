@@ -3,6 +3,82 @@
 import { createClient } from "@/lib/supabase"
 import { redirect } from "next/navigation"
 
+// Función para generar credenciales aleatorias
+function generateCredentials(name: string) {
+  const username = name.toLowerCase().replace(/\s+/g, "") + Math.floor(Math.random() * 1000)
+  const password = "temp" + Math.floor(Math.random() * 10000)
+  return { username, password }
+}
+
+export async function sendRsvp(formData: {
+  name: string
+  email: string
+  phone: string
+  guests: string
+  message: string
+}) {
+  const supabase = createClient()
+
+  try {
+    // Verificar si el usuario ya existe
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select("id, username")
+      .eq("email", formData.email)
+      .single()
+
+    let userId: string
+    let credentials = null
+
+    if (existingUser) {
+      userId = existingUser.id
+    } else {
+      // Generar credenciales
+      const username = formData.name.toLowerCase().replace(/\s+/g, "") + Math.floor(Math.random() * 1000)
+      const password = "temp" + Math.floor(Math.random() * 10000)
+      credentials = { username, password }
+
+      // Crear nuevo usuario
+      const { data: newUserId, error: createError } = await supabase.rpc("create_user_with_password", {
+        p_email: formData.email,
+        p_name: formData.name,
+        p_phone: formData.phone,
+        p_user_type: "guest",
+        p_username: credentials.username,
+        p_password: credentials.password,
+      })
+
+      if (createError) {
+        console.error("Error creando usuario:", createError)
+        throw new Error("Error al procesar RSVP")
+      }
+
+      userId = newUserId
+    }
+
+    // Crear confirmación RSVP
+    const { error: rsvpError } = await supabase.from("rsvp_confirmations").insert({
+      user_id: userId,
+      guests_count: Number.parseInt(formData.guests),
+      message: formData.message,
+    })
+
+    if (rsvpError) {
+      console.error("Error creando RSVP:", rsvpError)
+      throw new Error("Error al confirmar asistencia")
+    }
+
+    return {
+      success: true,
+      message: "RSVP confirmado exitosamente",
+      credentials: credentials,
+    }
+  } catch (error) {
+    console.error("Error en sendRsvp:", error)
+    throw error
+  }
+}
+
 export async function loginAction(formData: FormData) {
   const supabase = createClient()
 

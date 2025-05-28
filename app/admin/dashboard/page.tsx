@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase"
 import { Check, X, Trash2, ImageIcon, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
@@ -12,9 +11,27 @@ export default function AdminDashboard() {
   const [allPhotos, setAllPhotos] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
   const [activeTab, setActiveTab] = useState<"pending" | "all" | "users">("pending")
+  const [supabase, setSupabase] = useState<any>(null)
   const router = useRouter()
 
   useEffect(() => {
+    const initializeSupabase = async () => {
+      try {
+        const { createClient } = await import("@/lib/supabase")
+        const client = createClient()
+        setSupabase(client)
+      } catch (error) {
+        console.error("Error initializing Supabase:", error)
+        router.push("/")
+      }
+    }
+
+    initializeSupabase()
+  }, [router])
+
+  useEffect(() => {
+    if (!supabase) return
+
     const checkAuth = () => {
       const sessionToken = localStorage.getItem("session_token")
       const userType = localStorage.getItem("user_type")
@@ -32,12 +49,12 @@ export default function AdminDashboard() {
     }
 
     checkAuth()
-  }, [router])
+  }, [router, supabase])
 
   const loadData = async () => {
-    try {
-      const supabase = createClient()
+    if (!supabase) return
 
+    try {
       // Cargar fotos pendientes
       const { data: pending } = await supabase
         .from("photos")
@@ -71,9 +88,9 @@ export default function AdminDashboard() {
   }
 
   const handlePhotoAction = async (photoId: string, action: "approved" | "rejected") => {
-    try {
-      const supabase = createClient()
+    if (!supabase) return
 
+    try {
       const { error } = await supabase
         .from("photos")
         .update({
@@ -96,11 +113,10 @@ export default function AdminDashboard() {
   }
 
   const handleDeletePhoto = async (photoId: string, filePath: string) => {
+    if (!supabase) return
     if (!confirm("¿Estás seguro de eliminar esta foto permanentemente?")) return
 
     try {
-      const supabase = createClient()
-
       // Eliminar archivo del storage
       const { error: storageError } = await supabase.storage.from("event-photos").remove([filePath])
 
@@ -130,7 +146,7 @@ export default function AdminDashboard() {
     }
   }
 
-  if (loading) {
+  if (loading || !supabase) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-pink-200 border-t-pink-600 rounded-full"></div>

@@ -15,7 +15,6 @@ import GallerySection from "@/components/gallery-section"
 import CountdownSection from "@/components/countdown-section"
 import MusicPlayer, { type MusicPlayerRef } from "@/components/music-player"
 import { Montserrat } from "next/font/google"
-import { createClient } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 
 const montserrat = Montserrat({
@@ -32,7 +31,15 @@ export default function Home() {
   useEffect(() => {
     const checkGalleryStatus = async () => {
       try {
+        // Importar dinámicamente para evitar errores durante el build
+        const { createClient } = await import("@/lib/supabase")
         const supabase = createClient()
+
+        if (!supabase) {
+          setIsGalleryEnabled(false)
+          setIsLoading(false)
+          return
+        }
 
         // Obtener configuraciones
         const { data: settings, error } = await supabase
@@ -48,7 +55,7 @@ export default function Home() {
         }
 
         // Verificar si la galería está habilitada manualmente
-        const galleryEnabled = settings.find((s) => s.setting_key === "gallery_enabled")?.setting_value === "true"
+        const galleryEnabled = settings?.find((s) => s.setting_key === "gallery_enabled")?.setting_value === "true"
 
         if (galleryEnabled) {
           setIsGalleryEnabled(true)
@@ -57,7 +64,7 @@ export default function Home() {
         }
 
         // Verificar si debemos habilitar automáticamente por fecha
-        const unlockDate = settings.find((s) => s.setting_key === "gallery_unlock_date")?.setting_value
+        const unlockDate = settings?.find((s) => s.setting_key === "gallery_unlock_date")?.setting_value
 
         if (unlockDate) {
           const now = new Date()
