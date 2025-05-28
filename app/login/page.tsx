@@ -41,15 +41,21 @@ export default function LoginPage() {
       
       const user = users[0]
       
-      // Verificar contraseña (en un sistema real, usaríamos bcrypt o similar)
-      // Aquí estamos usando la función crypt de PostgreSQL que ya hicimos en la BD
+      // Verificar contraseña usando la función de Supabase
       const { data: passwordCheck, error: passwordError } = await supabase
         .rpc('verify_password', {
           input_username: username,
           input_password: password
         })
-      
-      if (passwordError || !passwordCheck) {
+
+      if (passwordError) {
+        console.error('Error verificando contraseña:', passwordError)
+        setError('Error del servidor. Intenta de nuevo.')
+        setLoading(false)
+        return
+      }
+
+      if (!passwordCheck) {
         setError('Usuario o contraseña incorrectos')
         setLoading(false)
         return

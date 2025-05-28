@@ -221,17 +221,12 @@ export interface Database {
         }
         Returns: boolean
       }
-      generate_easy_password: {
+      update_user_password: {
         Args: {
-          full_name: string
+          user_id: string
+          new_password: string
         }
-        Returns: string
-      }
-      generate_unique_username: {
-        Args: {
-          full_name: string
-        }
-        Returns: string
+        Returns: void
       }
     }
   }
