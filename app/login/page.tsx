@@ -57,17 +57,26 @@ export default function LoginPage() {
         .from("users")
         .select("*")
         .eq("username", username)
-        .eq("is_active", true)
-        .single() // Usar single() en lugar de limit(1)
+        .single()
 
-      console.log("Datos del usuario:", { userData, userError })
+      console.log("Consulta de usuario:", { username, userData, userError })
 
       if (userError) {
         console.error("Error obteniendo usuario:", userError)
+
+        // Intentar sin filtro de is_active para debug
+        const { data: debugUser, error: debugError } = await supabase
+          .from("users")
+          .select("*")
+          .eq("username", username)
+          .single()
+
+        console.log("Debug - usuario sin filtro:", { debugUser, debugError })
+
         if (userError.code === "PGRST116") {
-          setError("Usuario no encontrado o inactivo")
+          setError(`Usuario '${username}' no encontrado en la base de datos`)
         } else {
-          setError("Error del servidor al obtener usuario")
+          setError(`Error del servidor: ${userError.message}`)
         }
         setLoading(false)
         return
@@ -75,6 +84,13 @@ export default function LoginPage() {
 
       if (!userData) {
         setError("Usuario no encontrado")
+        setLoading(false)
+        return
+      }
+
+      // Verificar si el usuario está activo
+      if (!userData.is_active) {
+        setError("Usuario inactivo. Contacta al administrador.")
         setLoading(false)
         return
       }
