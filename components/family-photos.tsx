@@ -11,70 +11,70 @@ const FamilyPhotos = () => {
   const photos = [
     {
       id: 1,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia1-abc123.jpg",
+      src: "/images/familia1.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia reunida",
       caption: "Momentos especiales en familia",
     },
     {
       id: 2,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia2-def456.jpg",
+      src: "/images/familia2.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Celebración familiar",
       caption: "Celebrando juntos",
     },
     {
       id: 3,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia3-ghi789.jpg",
+      src: "/images/familia3.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Reunión familiar",
       caption: "Unidos siempre",
     },
     {
       id: 4,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia4-jkl012.jpg",
+      src: "/images/familia4.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Momentos en familia",
       caption: "Recuerdos inolvidables",
     },
     {
       id: 5,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia5-mno345.jpg",
+      src: "/images/familia5.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia feliz",
       caption: "Sonrisas que perduran",
     },
     {
       id: 6,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia6-pqr678.jpg",
+      src: "/images/familia6.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Tiempo en familia",
       caption: "Amor incondicional",
     },
     {
       id: 7,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia7-stu901.jpg",
+      src: "/images/familia7.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia unida",
       caption: "Lazos que nos unen",
     },
     {
       id: 8,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia8-vwx234.jpg",
+      src: "/images/familia8.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Momentos familiares",
       caption: "Tesoros del corazón",
     },
     {
       id: 9,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia9-yza567.jpg",
+      src: "/images/familia9.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia completa",
       caption: "Nuestra historia",
     },
     {
       id: 10,
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia10-bcd890.jpg",
+      src: "/images/familia10.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia querida",
       caption: "Amor eterno",
@@ -118,6 +118,7 @@ const FamilyPhotos = () => {
     setModalImage((prevIndex) => (prevIndex - 1 + photos.length) % photos.length)
   }
 
+  // Navegación con teclado en el modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isModalOpen) return
@@ -131,6 +132,7 @@ const FamilyPhotos = () => {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [isModalOpen])
 
+  // Carrusel automático (se pausa cuando el modal está abierto)
   useEffect(() => {
     if (isModalOpen) return
 
@@ -198,6 +200,7 @@ const FamilyPhotos = () => {
             </div>
           </div>
 
+          {/* Botones de navegación */}
           <button
             onClick={prevSlide}
             className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-pink-600 p-2 md:p-3 rounded-full shadow-md z-10 transition-colors"
@@ -214,6 +217,7 @@ const FamilyPhotos = () => {
             <ChevronRight size={20} className="md:w-6 md:h-6" />
           </button>
 
+          {/* Indicadores de puntos */}
           <div className="flex justify-center mt-4 md:mt-6 gap-1 md:gap-2">
             {photos.map((_, index) => (
               <button
@@ -227,6 +231,7 @@ const FamilyPhotos = () => {
             ))}
           </div>
 
+          {/* Miniaturas */}
           <div className="mt-6 md:mt-8 grid grid-cols-5 md:grid-cols-10 gap-1 md:gap-2">
             {photos.map((photo, index) => (
               <button
@@ -250,6 +255,7 @@ const FamilyPhotos = () => {
         </div>
       </div>
 
+      {/* Modal de imagen completa */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div

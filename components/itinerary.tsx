@@ -36,22 +36,22 @@ const Itinerary = () => {
       address: "166, Carboneras CP 42180 Mineral de la Reforma, Hgo.",
       description:
         "Te invito a acompañarme en esta ceremonia especial donde agradeceré a Dios por estos 15 años de vida y recibiré la bendición para esta nueva etapa que comienza.",
-      mapUrl: "https://maps.google.com",
+      mapUrl: "https://maps.google.com/?q=Iglesia+San+Judas+Tadeo+Carboneras+Mineral+de+la+Reforma+Hidalgo",
       icon: <Calendar className="w-6 h-6" />,
-      image: "/beautiful-church-interior.png",
+      image: "/images/iglesia.jpg",
       color: "from-pink-400 to-pink-600",
     },
     {
       id: 2,
       time: "16:00",
-      title: "Recepción",
+      title: "Recepción y Vals",
       location: "Rivento Salón y Jardín",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
       description:
         "Recuerda que al ser parte importante de esta celebración es necesario tu participación e integración para construir juntos momentos mágicos.",
-      mapUrl: "https://maps.google.com",
+      mapUrl: "https://maps.google.com/?q=Rivento+Salon+Jardin+Pachuquilla+Hidalgo",
       icon: <Music className="w-6 h-6" />,
-      image: "/elegant-ballroom.png",
+      image: "/images/salon.jpg",
       color: "from-purple-400 to-purple-600",
     },
     {
@@ -62,9 +62,9 @@ const Itinerary = () => {
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
       description:
         "Ya todos en el salón recibamos con cariño a Tamy, hoy celebramos con alegría y gozo sus quince años de vida.",
-      mapUrl: "https://maps.google.com",
+      mapUrl: "https://maps.google.com/?q=Rivento+Salon+Jardin+Pachuquilla+Hidalgo",
       icon: <Cake className="w-6 h-6" />,
-      image: "/elegant-ballroom.png",
+      image: "/images/salon.jpg",
       color: "from-rose-400 to-rose-600",
     },
   ]
@@ -141,7 +141,7 @@ const Itinerary = () => {
                   <div className="border-t border-pink-100 pt-4 mt-4">
                     <button
                       onClick={() => toggleEvent(event.id)}
-                      className="flex items-center justify-between w-full text-pink-600 font-medium"
+                      className="flex items-center justify-between w-full text-pink-600 font-medium hover:text-pink-700 transition-colors"
                     >
                       <span>Ver detalles</span>
                       {activeEvent === event.id ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -156,13 +156,13 @@ const Itinerary = () => {
                           transition={{ duration: 0.3 }}
                           className="overflow-hidden"
                         >
-                          <p className="text-gray-600 my-4">{event.description}</p>
+                          <p className="text-gray-600 my-4 leading-relaxed">{event.description}</p>
 
                           <a
                             href={event.mapUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 mt-2 text-pink-600 hover:text-pink-700 font-medium"
+                            className="inline-flex items-center gap-2 mt-2 text-pink-600 hover:text-pink-700 font-medium transition-colors"
                           >
                             <MapPin size={16} />
                             Ver ubicación en el mapa
