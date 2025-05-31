@@ -83,7 +83,7 @@ const GodmotherVideo = ({ onVideoPlay, onVideoEnd }: GodmotherVideoProps) => {
           transition={{ duration: 0.8 }}
           className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-pink-600 mb-8 md:mb-12"
         >
-          Video de la Madrina
+          Hada Madrina ✨
         </motion.h2>
 
         <motion.div
@@ -95,7 +95,7 @@ const GodmotherVideo = ({ onVideoPlay, onVideoEnd }: GodmotherVideoProps) => {
           {!isLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-pink-900/20">
               <div className="text-white text-center p-4">
-                <p className="mb-4 text-sm md:text-base">Video de la madrina recibiendo la invitación</p>
+                <p className="mb-4 text-sm md:text-base">Una princesa convocando a su hada madrina</p>
               </div>
             </div>
           )}
@@ -130,6 +130,13 @@ const GodmotherVideo = ({ onVideoPlay, onVideoEnd }: GodmotherVideoProps) => {
               </button>
             </div>
           )}
+
+          {/* Texto en la esquina inferior izquierda */}
+          <div className="absolute bottom-4 left-4 text-white">
+            <p className="text-sm md:text-base font-medium bg-black/50 px-3 py-1 rounded-full">
+              Una princesa convocando a su hada madrina
+            </p>
+          </div>
         </motion.div>
 
         <motion.div

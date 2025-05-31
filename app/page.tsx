@@ -118,6 +118,15 @@ export default function Home() {
       <CountdownModal targetDate="2025-08-09" onClose={handleCountdownClose} />
       <MusicPlayer ref={musicPlayerRef} />
 
+      {/* Logo fijo en la esquina superior izquierda */}
+      <div className="fixed top-4 left-4 z-50">
+        <img
+          src="/image/logo.png"
+          alt="Logo Tamy XV Años"
+          className="w-16 h-16 md:w-20 md:h-20 object-contain bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-md"
+        />
+      </div>
+
       {/* Botón de login */}
       <div className="fixed top-4 right-4 z-50">
         <button

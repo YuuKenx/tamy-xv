@@ -11,71 +11,71 @@ const FamilyPhotos = () => {
   const photos = [
     {
       id: 1,
-      src: "/images/familia1.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=familia reunida celebrando momentos especiales",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia1-abc123.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia reunida",
       caption: "Momentos especiales en familia",
     },
     {
       id: 2,
-      src: "/images/familia2.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=celebración familiar con sonrisas y alegría",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia2-def456.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Celebración familiar",
       caption: "Celebrando juntos",
     },
     {
       id: 3,
-      src: "/images/familia3.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=reunión familiar unida con amor",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia3-ghi789.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Reunión familiar",
       caption: "Unidos siempre",
     },
     {
       id: 4,
-      src: "/images/familia4.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=momentos inolvidables en familia",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia4-jkl012.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Momentos en familia",
       caption: "Recuerdos inolvidables",
     },
     {
       id: 5,
-      src: "/images/familia5.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=familia feliz con sonrisas radiantes",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia5-mno345.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia feliz",
       caption: "Sonrisas que perduran",
     },
     {
       id: 6,
-      src: "/images/familia6.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=tiempo de calidad en familia",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia6-pqr678.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Tiempo en familia",
       caption: "Amor incondicional",
     },
     {
       id: 7,
-      src: "/images/familia7.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=familia unida con lazos fuertes",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia7-stu901.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia unida",
       caption: "Lazos que nos unen",
     },
     {
       id: 8,
-      src: "/images/familia8.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=momentos familiares como tesoros",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia8-vwx234.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Momentos familiares",
       caption: "Tesoros del corazón",
     },
     {
       id: 9,
-      src: "/images/familia9.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=familia completa con historia compartida",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia9-yza567.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia completa",
       caption: "Nuestra historia",
     },
     {
       id: 10,
-      src: "/images/familia10.jpg",
-      fallback: "/placeholder.svg?height=600&width=800&query=familia querida con amor eterno",
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/familia10-bcd890.jpg",
+      fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia querida",
       caption: "Amor eterno",
     },
@@ -170,7 +170,7 @@ const FamilyPhotos = () => {
                   <img
                     src={getImageSrc(currentIndex) || "/placeholder.svg"}
                     alt={photos[currentIndex].alt}
-                    className="w-full h-full object-contain bg-pink-50"
+                    className="w-full h-full object-cover bg-pink-50"
                     onError={() => handleImageError(currentIndex)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end p-4 md:p-6">
