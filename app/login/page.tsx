@@ -52,23 +52,34 @@ export default function LoginPage() {
         return
       }
 
-      // Obtener datos del usuario
-      const { data: users, error: userError } = await supabase
+      // Obtener datos del usuario - consulta mejorada
+      const { data: userData, error: userError } = await supabase
         .from("users")
         .select("*")
         .eq("username", username)
         .eq("is_active", true)
-        .limit(1)
+        .single() // Usar single() en lugar de limit(1)
 
-      console.log("Datos del usuario:", { users, userError })
+      console.log("Datos del usuario:", { userData, userError })
 
-      if (userError || !users || users.length === 0) {
+      if (userError) {
+        console.error("Error obteniendo usuario:", userError)
+        if (userError.code === "PGRST116") {
+          setError("Usuario no encontrado o inactivo")
+        } else {
+          setError("Error del servidor al obtener usuario")
+        }
+        setLoading(false)
+        return
+      }
+
+      if (!userData) {
         setError("Usuario no encontrado")
         setLoading(false)
         return
       }
 
-      const user = users[0]
+      const user = userData
 
       // Crear sesión
       const sessionToken = crypto.randomUUID()
