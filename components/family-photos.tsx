@@ -11,70 +11,70 @@ const FamilyPhotos = () => {
   const photos = [
     {
       id: 1,
-      src: "/image/familia1.jpg",
+      src: "/images/familia1.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia reunida",
       caption: "Momentos especiales en familia",
     },
     {
       id: 2,
-      src: "/image/familia2.jpg",
+      src: "/images/familia2.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Celebración familiar",
       caption: "Celebrando juntos",
     },
     {
       id: 3,
-      src: "/image/familia3.jpg",
+      src: "/images/familia3.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Reunión familiar",
       caption: "Unidos siempre",
     },
     {
       id: 4,
-      src: "/image/familia4.jpg",
+      src: "/images/familia4.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Momentos en familia",
       caption: "Recuerdos inolvidables",
     },
     {
       id: 5,
-      src: "/image/familia5.jpg",
+      src: "/images/familia5.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia feliz",
       caption: "Sonrisas que perduran",
     },
     {
       id: 6,
-      src: "/image/familia6.jpg",
+      src: "/images/familia6.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Tiempo en familia",
       caption: "Amor incondicional",
     },
     {
       id: 7,
-      src: "/image/familia7.jpg",
+      src: "/images/familia7.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia unida",
       caption: "Lazos que nos unen",
     },
     {
       id: 8,
-      src: "/image/familia8.jpg",
+      src: "/images/familia8.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Momentos familiares",
       caption: "Tesoros del corazón",
     },
     {
       id: 9,
-      src: "/image/familia9.jpg",
+      src: "/images/familia9.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia completa",
       caption: "Nuestra historia",
     },
     {
       id: 10,
-      src: "/image/familia10.jpg",
+      src: "/images/familia10.jpg",
       fallback: "/placeholder.svg?height=600&width=800",
       alt: "Familia querida",
       caption: "Amor eterno",
@@ -172,7 +172,7 @@ const FamilyPhotos = () => {
                   <img
                     src={getImageSrc(currentIndex) || "/placeholder.svg"}
                     alt={photos[currentIndex].alt}
-                    className="w-full h-full object-cover bg-pink-50"
+                    className="w-full h-full object-contain bg-pink-50"
                     onError={() => handleImageError(currentIndex)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end p-4 md:p-6">
