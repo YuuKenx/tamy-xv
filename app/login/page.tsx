@@ -23,31 +23,21 @@ export default function LoginPage() {
     try {
       const supabase = createClient()
 
-      // Buscar usuario por username
-      const { data: users, error: userError } = await supabase
-        .from("users")
-        .select("id, email, name, user_type, username, password_hash")
-        .eq("username", username)
-        .eq("is_active", true)
-        .limit(1)
-
-      if (userError) {
-        throw new Error("Error al buscar usuario")
-      }
-
-      if (!users || users.length === 0) {
-        setError("Usuario o contraseña incorrectos")
+      if (!supabase) {
+        setError("Error de conexión. Intenta de nuevo.")
         setLoading(false)
         return
       }
 
-      const user = users[0]
+      console.log("Intentando login con:", { username, password })
 
       // Verificar contraseña usando la función de Supabase
       const { data: passwordCheck, error: passwordError } = await supabase.rpc("verify_password", {
         input_username: username,
         input_password: password,
       })
+
+      console.log("Resultado verify_password:", { passwordCheck, passwordError })
 
       if (passwordError) {
         console.error("Error verificando contraseña:", passwordError)
@@ -62,31 +52,55 @@ export default function LoginPage() {
         return
       }
 
+      // Obtener datos del usuario
+      const { data: users, error: userError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("username", username)
+        .eq("is_active", true)
+        .limit(1)
+
+      console.log("Datos del usuario:", { users, userError })
+
+      if (userError || !users || users.length === 0) {
+        setError("Usuario no encontrado")
+        setLoading(false)
+        return
+      }
+
+      const user = users[0]
+
       // Crear sesión
+      const sessionToken = crypto.randomUUID()
       const { data: session, error: sessionError } = await supabase
         .from("user_sessions")
         .insert({
           user_id: user.id,
-          session_token: crypto.randomUUID(),
+          session_token: sessionToken,
           expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 días
         })
         .select()
 
       if (sessionError) {
-        throw new Error("Error al crear sesión")
+        console.error("Error creando sesión:", sessionError)
+        setError("Error al crear sesión")
+        setLoading(false)
+        return
       }
 
       // Guardar sesión en localStorage
-      localStorage.setItem("session_token", session[0].session_token)
+      localStorage.setItem("session_token", sessionToken)
       localStorage.setItem("user_id", user.id)
       localStorage.setItem("user_type", user.user_type)
       localStorage.setItem("user_name", user.name)
 
+      console.log("Login exitoso, redirigiendo...", { userType: user.user_type })
+
       // Redirigir según tipo de usuario
-      if (user.user_type === "guest") {
-        router.push("/gallery/upload")
-      } else {
+      if (user.user_type === "super_admin" || user.user_type === "host") {
         router.push("/admin/dashboard")
+      } else {
+        router.push("/gallery/upload")
       }
     } catch (error) {
       console.error("Error de login:", error)
