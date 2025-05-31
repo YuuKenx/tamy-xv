@@ -38,7 +38,7 @@ const Itinerary = () => {
         "Te invito a acompañarme en esta ceremonia especial donde agradeceré a Dios por estos 15 años de vida y recibiré la bendición para esta nueva etapa que comienza.",
       mapUrl: "https://maps.google.com/?q=Iglesia+San+Judas+Tadeo+Carboneras+Mineral+de+la+Reforma+Hidalgo",
       icon: <Calendar className="w-6 h-6" />,
-      image: "/images/iglesia.jpg",
+      image: "/image/iglesia.jpg",
       color: "from-pink-400 to-pink-600",
     },
     {
@@ -51,7 +51,7 @@ const Itinerary = () => {
         "Recuerda que al ser parte importante de esta celebración es necesario tu participación e integración para construir juntos momentos mágicos.",
       mapUrl: "https://maps.google.com/?q=Rivento+Salon+Jardin+Pachuquilla+Hidalgo",
       icon: <Music className="w-6 h-6" />,
-      image: "/images/salon.jpg",
+      image: "/image/salon.jpg",
       color: "from-purple-400 to-purple-600",
     },
     {
@@ -64,7 +64,7 @@ const Itinerary = () => {
         "Ya todos en el salón recibamos con cariño a Tamy, hoy celebramos con alegría y gozo sus quince años de vida.",
       mapUrl: "https://maps.google.com/?q=Rivento+Salon+Jardin+Pachuquilla+Hidalgo",
       icon: <Cake className="w-6 h-6" />,
-      image: "/images/salon.jpg",
+      image: "/image/salon.jpg",
       color: "from-rose-400 to-rose-600",
     },
   ]
