@@ -26,18 +26,18 @@ export async function loginAction(formData: {
     const { data: confirmations, error: queryError } = await supabase
       .from("rsvp_confirmations")
       .select(`
-        id,
-        username,
-        password_hash,
-        invited_guest_id,
-        is_active,
-        invited_guests!inner(
-          id,
-          full_name,
-          guest_type,
-          email
-        )
-      `)
+    id,
+    username,
+    password_hash,
+    invited_guest_id,
+    is_active,
+    invited_guests (
+      id,
+      full_name,
+      guest_type,
+      email
+    )
+  `)
       .eq("username", username)
       .eq("is_active", true)
 
@@ -53,6 +53,12 @@ export async function loginAction(formData: {
 
     const confirmation = confirmations[0]
     console.log("Usuario encontrado:", confirmation.username)
+
+    // Verificar que tenemos los datos del invitado
+    if (!confirmation.invited_guests) {
+      console.error("No se encontraron datos del invitado")
+      return { error: "Error en los datos del usuario" }
+    }
 
     // Verificar contraseña usando la función crypt de PostgreSQL
     const { data: passwordCheck, error: passwordError } = await supabase.rpc("verify_password_hash", {
@@ -96,7 +102,7 @@ export async function loginAction(formData: {
       fullName: confirmation.invited_guests.full_name,
       userType: confirmation.invited_guests.guest_type === "admin" ? "host" : confirmation.invited_guests.guest_type,
       sessionToken: crypto.randomUUID(),
-      galleryEnabled: false, // Por ahora false, luego verificaremos
+      galleryEnabled: false,
     }
 
     // Registrar actividad
