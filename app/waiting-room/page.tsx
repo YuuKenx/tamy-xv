@@ -6,6 +6,9 @@ import { Calendar, Clock, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { getWelcomeMessage, checkGalleryStatus } from "@/app/actions"
 
+// Importar el componente de navegación
+import GalleryNav from "@/components/gallery-nav"
+
 export default function WaitingRoomPage() {
   const [userName, setUserName] = useState<string>("")
   const [welcomeMessage, setWelcomeMessage] = useState<string>("")
@@ -124,6 +127,7 @@ export default function WaitingRoomPage() {
           </div>
         </motion.div>
       </div>
+      <GalleryNav />
     </div>
   )
 }

@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase"
 import { Upload, ImageIcon, X, ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import { checkGalleryStatus } from "@/app/actions"
+
+// Importar el componente de navegación
+import GalleryNav from "@/components/gallery-nav"
 
 export default function UploadGallery() {
   const [user, setUser] = useState<any>(null)
@@ -15,40 +17,22 @@ export default function UploadGallery() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [captions, setCaptions] = useState<{ [key: number]: string }>({})
   const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([])
-  const [galleryEnabled, setGalleryEnabled] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuth = () => {
       const sessionToken = localStorage.getItem("session_token")
       const userType = localStorage.getItem("user_type")
       const userName = localStorage.getItem("user_name")
       const userId = localStorage.getItem("user_id")
 
-      if (!sessionToken) {
+      if (!sessionToken || userType !== "guest") {
         router.push("/login")
         return
       }
 
-      // Verificar si la galería está habilitada
-      const { enabled } = await checkGalleryStatus()
-      setGalleryEnabled(enabled)
-
-      if (!enabled && userType !== "admin" && userType !== "host") {
-        router.push("/waiting-room")
-        return
-      }
-
-      setUser({
-        id: userId,
-        name: userName,
-        type: userType,
-      })
-
-      if (userId) {
-        loadUserPhotos(userId)
-      }
-
+      setUser({ id: userId, name: userName, type: userType })
+      loadUserPhotos(userId!)
       setLoading(false)
     }
 
@@ -58,42 +42,13 @@ export default function UploadGallery() {
   const loadUserPhotos = async (userId: string) => {
     try {
       const supabase = createClient()
-
-      if (!supabase) {
-        console.error("No se pudo crear el cliente Supabase")
-        return
-      }
-
-      // Obtener el ID de confirmación RSVP del usuario
-      const { data: rsvpData, error: rsvpError } = await supabase
-        .from("rsvp_confirmations")
-        .select("id")
-        .eq("id", userId)
-        .single()
-
-      if (rsvpError) {
-        console.error("Error al obtener confirmación RSVP:", rsvpError)
-        return
-      }
-
-      if (!rsvpData) {
-        console.error("No se encontró confirmación RSVP para el usuario")
-        return
-      }
-
-      // Obtener fotos del usuario
       const { data: photos, error } = await supabase
         .from("photos")
         .select("*")
-        .eq("rsvp_confirmation_id", rsvpData.id)
-        .eq("is_deleted", false)
+        .eq("user_id", userId)
         .order("uploaded_at", { ascending: false })
 
-      if (error) {
-        console.error("Error al cargar fotos:", error)
-        return
-      }
-
+      if (error) throw error
       setUploadedPhotos(photos || [])
     } catch (error) {
       console.error("Error al cargar fotos:", error)
@@ -128,25 +83,6 @@ export default function UploadGallery() {
     try {
       const supabase = createClient()
 
-      if (!supabase) {
-        throw new Error("No se pudo crear el cliente Supabase")
-      }
-
-      // Obtener el ID de confirmación RSVP del usuario
-      const { data: rsvpData, error: rsvpError } = await supabase
-        .from("rsvp_confirmations")
-        .select("id")
-        .eq("id", user.id)
-        .single()
-
-      if (rsvpError) {
-        throw rsvpError
-      }
-
-      if (!rsvpData) {
-        throw new Error("No se encontró confirmación RSVP para el usuario")
-      }
-
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i]
         const fileExt = file.name.split(".").pop()
@@ -159,12 +95,10 @@ export default function UploadGallery() {
 
         // Guardar registro en base de datos
         const { error: dbError } = await supabase.from("photos").insert({
-          rsvp_confirmation_id: rsvpData.id,
+          user_id: user.id,
           filename: fileName,
           original_name: file.name,
           file_path: fileName,
-          file_size: file.size,
-          mime_type: file.type,
           caption: captions[i] || null,
           status: "pending",
         })
@@ -214,25 +148,6 @@ export default function UploadGallery() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-pink-200 border-t-pink-600 rounded-full"></div>
-      </div>
-    )
-  }
-
-  if (!galleryEnabled && user?.type !== "admin" && user?.type !== "host") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-50 to-purple-100 p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md text-center">
-          <h1 className="text-2xl font-bold text-pink-600 mb-4">Galería no disponible</h1>
-          <p className="text-gray-600 mb-6">
-            La galería de fotos estará disponible después del evento. Vuelve a partir del 10 de agosto.
-          </p>
-          <Link
-            href="/"
-            className="inline-block px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
-          >
-            Volver al inicio
-          </Link>
-        </div>
       </div>
     )
   }
@@ -349,6 +264,7 @@ export default function UploadGallery() {
             )}
           </div>
         </div>
+        <GalleryNav />
       </div>
     </div>
   )
