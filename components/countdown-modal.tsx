@@ -17,7 +17,8 @@ const CountdownModal = ({ targetDate, onClose }: CountdownModalProps) => {
   })
 
   useEffect(() => {
-    const target = new Date(targetDate).getTime()
+    // Fecha correcta: 9 de agosto 2025 a las 13:00 horas
+    const target = new Date("2025-08-09T13:00:00").getTime()
 
     const updateCountdown = () => {
       const now = new Date().getTime()
@@ -93,7 +94,7 @@ const CountdownModal = ({ targetDate, onClose }: CountdownModalProps) => {
         </div>
 
         <div className="text-center mt-4 md:mt-6">
-          <p className="text-pink-700 font-medium text-sm md:text-base">9 de Agosto, 2025</p>
+          <p className="text-pink-700 font-medium text-sm md:text-base">9 de Agosto, 2025 - 13:00 hrs</p>
         </div>
       </div>
     </div>

@@ -32,7 +32,8 @@ const CountdownSection = () => {
   }, [])
 
   useEffect(() => {
-    const targetDate = new Date("2025-08-09T00:00:00").getTime()
+    // Fecha correcta: 9 de agosto 2025 a las 13:00 horas
+    const targetDate = new Date("2025-08-09T13:00:00").getTime()
 
     const updateCountdown = () => {
       const now = new Date().getTime()
@@ -116,7 +117,7 @@ const CountdownSection = () => {
             className="text-center mt-10"
           >
             <div className="inline-block bg-white px-8 py-4 rounded-full shadow-md">
-              <p className="text-lg font-medium text-pink-600">9 de Agosto, 2025</p>
+              <p className="text-lg font-medium text-pink-600">9 de Agosto, 2025 - 13:00 hrs</p>
             </div>
           </motion.div>
         </motion.div>

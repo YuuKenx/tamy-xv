@@ -13,6 +13,7 @@ import RsvpForm from "@/components/rsvp-form"
 import GiftRegistry from "@/components/gift-registry"
 import GallerySection from "@/components/gallery-section"
 import CountdownSection from "@/components/countdown-section"
+import DressCode from "@/components/dress-code"
 import MusicPlayer, { type MusicPlayerRef } from "@/components/music-player"
 import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
@@ -31,30 +32,57 @@ export default function Home() {
   useEffect(() => {
     const checkGalleryStatus = async () => {
       try {
-        // Importar dinámicamente para evitar errores durante el build
-        const { createClient } = await import("@/lib/supabase")
-        const supabase = createClient()
-
-        if (!supabase) {
+        // Check if we're in a browser environment
+        if (typeof window === "undefined") {
           setIsGalleryEnabled(false)
           setIsLoading(false)
           return
         }
 
-        // Obtener configuraciones
+        // Try to import and create Supabase client
+        const { createClient } = await import("@/lib/supabase")
+
+        // Check if environment variables are available
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+          console.log("Supabase environment variables not configured, disabling gallery")
+          setIsGalleryEnabled(false)
+          setIsLoading(false)
+          return
+        }
+
+        const supabase = createClient()
+
+        if (!supabase) {
+          console.log("Failed to create Supabase client, disabling gallery")
+          setIsGalleryEnabled(false)
+          setIsLoading(false)
+          return
+        }
+
+        // Test connection first with a simple query
+        const { error: connectionError } = await supabase.from("system_settings").select("setting_key").limit(1)
+
+        if (connectionError) {
+          console.log("Supabase connection failed, disabling gallery:", connectionError.message)
+          setIsGalleryEnabled(false)
+          setIsLoading(false)
+          return
+        }
+
+        // Get gallery settings
         const { data: settings, error } = await supabase
           .from("system_settings")
           .select("setting_key, setting_value")
           .in("setting_key", ["gallery_enabled", "gallery_unlock_date"])
 
         if (error) {
-          console.error("Error al obtener configuraciones:", error)
+          console.log("Error fetching gallery settings, disabling gallery:", error.message)
           setIsGalleryEnabled(false)
           setIsLoading(false)
           return
         }
 
-        // Verificar si la galería está habilitada manualmente
+        // Check if gallery is manually enabled
         const galleryEnabled = settings?.find((s) => s.setting_key === "gallery_enabled")?.setting_value === "true"
 
         if (galleryEnabled) {
@@ -63,22 +91,26 @@ export default function Home() {
           return
         }
 
-        // Verificar si debemos habilitar automáticamente por fecha
+        // Check if gallery should be auto-enabled by date
         const unlockDate = settings?.find((s) => s.setting_key === "gallery_unlock_date")?.setting_value
 
         if (unlockDate) {
           const now = new Date()
           const unlockDateTime = new Date(unlockDate)
 
-          // Si la fecha actual es posterior a la fecha de desbloqueo, habilitar
           if (now >= unlockDateTime) {
             setIsGalleryEnabled(true)
+            setIsLoading(false)
+            return
           }
         }
 
+        // Default to disabled
+        setIsGalleryEnabled(false)
         setIsLoading(false)
       } catch (error) {
-        console.error("Error al verificar estado de galería:", error)
+        console.log("Gallery check failed, disabling gallery:", error)
+        // Gracefully disable gallery on any error
         setIsGalleryEnabled(false)
         setIsLoading(false)
       }
@@ -115,7 +147,7 @@ export default function Home() {
     >
       <StarBackground />
       <FloatingHearts />
-      <CountdownModal targetDate="2025-08-09" onClose={handleCountdownClose} />
+      <CountdownModal targetDate="2025-08-09T13:00:00" onClose={handleCountdownClose} />
       <MusicPlayer ref={musicPlayerRef} />
 
       {/* Logo fijo en la esquina superior izquierda */}
@@ -144,9 +176,12 @@ export default function Home() {
 
         <FamilyPhotos />
 
+        {/* Video del hada madrina ANTES del mensaje de la quinceañera */}
+        <GodmotherVideo onVideoPlay={handleVideoPlay} onVideoEnd={handleVideoEnd} />
+
         <QuinceaneraMesage />
 
-        <GodmotherVideo onVideoPlay={handleVideoPlay} onVideoEnd={handleVideoEnd} />
+        <DressCode />
 
         <Itinerary />
 
