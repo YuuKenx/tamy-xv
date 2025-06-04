@@ -3,9 +3,10 @@ import { useState } from "react"
 import type React from "react"
 
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase"
+import { loginAction, getWelcomeMessage } from "@/app/actions"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { useEffect } from "react"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
@@ -13,7 +14,17 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [welcomeMessage, setWelcomeMessage] = useState("")
   const router = useRouter()
+
+  useEffect(() => {
+    const fetchWelcomeMessage = async () => {
+      const message = await getWelcomeMessage()
+      setWelcomeMessage(message)
+    }
+
+    fetchWelcomeMessage()
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,113 +32,38 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const supabase = createClient()
-
-      if (!supabase) {
-        setError("Error de conexión. Intenta de nuevo.")
-        setLoading(false)
-        return
-      }
-
-      console.log("Intentando login con:", { username, password })
-
-      // Verificar contraseña usando la función de Supabase
-      const { data: passwordCheck, error: passwordError } = await supabase.rpc("verify_password", {
-        input_username: username,
-        input_password: password,
+      const result = await loginAction({
+        username,
+        password,
       })
 
-      console.log("Resultado verify_password:", { passwordCheck, passwordError })
-
-      if (passwordError) {
-        console.error("Error verificando contraseña:", passwordError)
-        setError("Error del servidor. Intenta de nuevo.")
+      if (result.error) {
+        setError(result.error)
         setLoading(false)
         return
       }
 
-      if (!passwordCheck) {
-        setError("Usuario o contraseña incorrectos")
-        setLoading(false)
-        return
-      }
+      if (result.success && result.session) {
+        // Guardar sesión en localStorage
+        localStorage.setItem("session_token", result.session.sessionToken)
+        localStorage.setItem("user_id", result.session.userId)
+        localStorage.setItem("guest_id", result.session.guestId)
+        localStorage.setItem("user_type", result.session.userType)
+        localStorage.setItem("user_name", result.session.fullName)
+        localStorage.setItem("gallery_enabled", String(result.session.galleryEnabled))
 
-      // Obtener datos del usuario - consulta mejorada
-      const { data: userData, error: userError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("username", username)
-        .single()
+        console.log("Login exitoso, redirigiendo...", { userType: result.session.userType })
 
-      console.log("Consulta de usuario:", { username, userData, userError })
-
-      if (userError) {
-        console.error("Error obteniendo usuario:", userError)
-
-        // Intentar sin filtro de is_active para debug
-        const { data: debugUser, error: debugError } = await supabase
-          .from("users")
-          .select("*")
-          .eq("username", username)
-          .single()
-
-        console.log("Debug - usuario sin filtro:", { debugUser, debugError })
-
-        if (userError.code === "PGRST116") {
-          setError(`Usuario '${username}' no encontrado en la base de datos`)
+        // Redirigir según tipo de usuario
+        if (result.session.userType === "admin" || result.session.userType === "host") {
+          router.push("/admin/dashboard")
+        } else if (result.session.galleryEnabled) {
+          router.push("/gallery/upload")
         } else {
-          setError(`Error del servidor: ${userError.message}`)
+          router.push("/waiting-room")
         }
-        setLoading(false)
-        return
-      }
-
-      if (!userData) {
-        setError("Usuario no encontrado")
-        setLoading(false)
-        return
-      }
-
-      // Verificar si el usuario está activo
-      if (!userData.is_active) {
-        setError("Usuario inactivo. Contacta al administrador.")
-        setLoading(false)
-        return
-      }
-
-      const user = userData
-
-      // Crear sesión
-      const sessionToken = crypto.randomUUID()
-      const { data: session, error: sessionError } = await supabase
-        .from("user_sessions")
-        .insert({
-          user_id: user.id,
-          session_token: sessionToken,
-          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 días
-        })
-        .select()
-
-      if (sessionError) {
-        console.error("Error creando sesión:", sessionError)
-        setError("Error al crear sesión")
-        setLoading(false)
-        return
-      }
-
-      // Guardar sesión en localStorage
-      localStorage.setItem("session_token", sessionToken)
-      localStorage.setItem("user_id", user.id)
-      localStorage.setItem("user_type", user.user_type)
-      localStorage.setItem("user_name", user.name)
-
-      console.log("Login exitoso, redirigiendo...", { userType: user.user_type })
-
-      // Redirigir según tipo de usuario
-      if (user.user_type === "super_admin" || user.user_type === "host") {
-        router.push("/admin/dashboard")
       } else {
-        router.push("/gallery/upload")
+        setError("Error desconocido al iniciar sesión")
       }
     } catch (error) {
       console.error("Error de login:", error)

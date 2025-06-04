@@ -1,14 +1,6 @@
 "use server"
 
 import { createClient } from "@/lib/supabase"
-import { redirect } from "next/navigation"
-
-// Función para generar credenciales aleatorias
-function generateCredentials(name: string) {
-  const username = name.toLowerCase().replace(/\s+/g, "") + Math.floor(Math.random() * 1000)
-  const password = "temp" + Math.floor(Math.random() * 10000)
-  return { username, password }
-}
 
 export async function sendRsvp(formData: {
   name: string
@@ -20,78 +12,62 @@ export async function sendRsvp(formData: {
   const supabase = createClient()
 
   try {
-    // Verificar si el usuario ya existe
-    const { data: existingUser } = await supabase
-      .from("users")
-      .select("id, username")
-      .eq("email", formData.email)
-      .single()
-
-    let userId: string
-    let credentials = null
-
-    if (existingUser) {
-      userId = existingUser.id
-    } else {
-      // Generar credenciales
-      const username = formData.name.toLowerCase().replace(/\s+/g, "") + Math.floor(Math.random() * 1000)
-      const password = "temp" + Math.floor(Math.random() * 10000)
-      credentials = { username, password }
-
-      // Crear nuevo usuario
-      const { data: newUserId, error: createError } = await supabase.rpc("create_user_with_password", {
-        p_email: formData.email,
-        p_name: formData.name,
-        p_phone: formData.phone,
-        p_user_type: "guest",
-        p_username: credentials.username,
-        p_password: credentials.password,
-      })
-
-      if (createError) {
-        console.error("Error creando usuario:", createError)
-        throw new Error("Error al procesar RSVP")
-      }
-
-      userId = newUserId
-    }
-
-    // Crear confirmación RSVP
-    const { error: rsvpError } = await supabase.from("rsvp_confirmations").insert({
-      user_id: userId,
-      guests_count: Number.parseInt(formData.guests),
-      message: formData.message,
+    // Usar la nueva función para crear confirmación RSVP
+    const { data, error } = await supabase.rpc("create_rsvp_confirmation", {
+      guest_email: formData.email,
+      guest_name: formData.name,
+      guests_count: Number.parseInt(formData.guests, 10),
+      message: formData.message || null,
     })
 
-    if (rsvpError) {
-      console.error("Error creando RSVP:", rsvpError)
-      throw new Error("Error al confirmar asistencia")
+    if (error) {
+      console.error("Error en RSVP:", error)
+      return {
+        success: false,
+        message: "Error al procesar tu confirmación: " + error.message,
+      }
+    }
+
+    if (!data.success) {
+      return {
+        success: false,
+        message: data.message_text,
+      }
     }
 
     return {
       success: true,
-      message: "RSVP confirmado exitosamente",
-      credentials: credentials,
+      message: data.message_text,
+      credentials: {
+        username: data.username,
+        password: data.password,
+      },
     }
   } catch (error) {
     console.error("Error en sendRsvp:", error)
-    throw error
+    return {
+      success: false,
+      message: "Error interno del servidor",
+    }
   }
 }
 
-export async function loginAction(formData: FormData) {
+export async function loginAction(formData: {
+  username: string
+  password: string
+}) {
   const supabase = createClient()
 
-  const username = formData.get("username") as string
-  const password = formData.get("password") as string
+  const username = formData.username
+  const password = formData.password
 
   if (!username || !password) {
     return { error: "Usuario y contraseña son requeridos" }
   }
 
   try {
-    // Verificar credenciales usando la función de la base de datos
-    const { data: isValid, error } = await supabase.rpc("verify_password", {
+    // Usar la nueva función para verificar credenciales
+    const { data, error } = await supabase.rpc("verify_login_credentials", {
       input_username: username,
       input_password: password,
     })
@@ -101,35 +77,44 @@ export async function loginAction(formData: FormData) {
       return { error: "Error al verificar credenciales" }
     }
 
-    if (!isValid) {
+    if (!data || data.length === 0) {
       return { error: "Usuario o contraseña incorrectos" }
     }
 
-    // Obtener datos del usuario
-    const { data: user, error: userError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("username", username)
-      .eq("is_active", true)
-      .single()
+    const user = data[0]
 
-    if (userError || !user) {
-      return { error: "Usuario no encontrado" }
+    // Verificar si la galería está habilitada
+    const { data: galleryEnabled, error: galleryError } = await supabase.rpc("is_gallery_enabled")
+
+    if (galleryError) {
+      console.error("Error verificando estado de galería:", galleryError)
     }
 
-    // Crear sesión simple (en una app real usarías JWT o cookies seguras)
+    // Crear sesión simple
+    const sessionToken = crypto.randomUUID()
+    const { error: sessionError } = await supabase.from("activity_logs").insert({
+      rsvp_confirmation_id: user.user_id,
+      action: "login",
+      details: { username, gallery_enabled: galleryEnabled || false },
+    })
+
+    if (sessionError) {
+      console.error("Error registrando sesión:", sessionError)
+    }
+
+    // Guardar datos en localStorage
     const sessionData = {
-      userId: user.id,
-      username: user.username,
-      userType: user.user_type,
-      name: user.name,
+      userId: user.user_id,
+      guestId: user.guest_id,
+      fullName: user.full_name,
+      userType: user.guest_type,
+      sessionToken,
+      galleryEnabled: galleryEnabled || false,
     }
 
-    // Redirigir según el tipo de usuario
-    if (user.user_type === "super_admin") {
-      redirect("/admin/dashboard")
-    } else {
-      redirect("/")
+    return {
+      success: true,
+      session: sessionData,
     }
   } catch (error) {
     console.error("Error en login:", error)
@@ -137,97 +122,41 @@ export async function loginAction(formData: FormData) {
   }
 }
 
-export async function createUserAction(formData: FormData) {
+export async function checkGalleryStatus() {
   const supabase = createClient()
 
-  const email = formData.get("email") as string
-  const name = formData.get("name") as string
-  const phone = formData.get("phone") as string
-  const username = formData.get("username") as string
-  const password = formData.get("password") as string
-  const userType = (formData.get("userType") as string) || "guest"
-
-  if (!email || !name || !username || !password) {
-    return { error: "Todos los campos son requeridos" }
-  }
-
   try {
-    const { data: userId, error } = await supabase.rpc("create_user_with_password", {
-      p_email: email,
-      p_name: name,
-      p_phone: phone,
-      p_user_type: userType,
-      p_username: username,
-      p_password: password,
-    })
+    const { data: galleryEnabled, error } = await supabase.rpc("is_gallery_enabled")
 
     if (error) {
-      console.error("Error creando usuario:", error)
-      return { error: "Error al crear usuario" }
+      console.error("Error verificando estado de galería:", error)
+      return { enabled: false }
     }
 
-    return { success: true, userId }
+    return { enabled: galleryEnabled || false }
   } catch (error) {
-    console.error("Error en createUser:", error)
-    return { error: "Error interno del servidor" }
+    console.error("Error en checkGalleryStatus:", error)
+    return { enabled: false }
   }
 }
 
-export async function submitRSVP(formData: FormData) {
+export async function getWelcomeMessage() {
   const supabase = createClient()
 
-  const name = formData.get("name") as string
-  const email = formData.get("email") as string
-  const phone = formData.get("phone") as string
-  const guestsCount = Number.parseInt(formData.get("guestsCount") as string) || 1
-  const message = formData.get("message") as string
-
-  if (!name || !email) {
-    return { error: "Nombre y email son requeridos" }
-  }
-
   try {
-    // Crear o encontrar usuario
-    let userId: string
+    const { data, error } = await supabase
+      .from("system_settings")
+      .select("setting_value")
+      .eq("setting_key", "welcome_message")
+      .single()
 
-    const { data: existingUser } = await supabase.from("users").select("id").eq("email", email).single()
-
-    if (existingUser) {
-      userId = existingUser.id
-    } else {
-      // Crear nuevo usuario
-      const { data: newUserId, error: createError } = await supabase.rpc("create_user_with_password", {
-        p_email: email,
-        p_name: name,
-        p_phone: phone,
-        p_user_type: "guest",
-        p_username: email,
-        p_password: "temp_password_" + Date.now(),
-      })
-
-      if (createError) {
-        console.error("Error creando usuario:", createError)
-        return { error: "Error al procesar RSVP" }
-      }
-
-      userId = newUserId
+    if (error || !data) {
+      return "Gracias por confirmar tu asistencia. Nos vemos pronto."
     }
 
-    // Crear confirmación RSVP
-    const { error: rsvpError } = await supabase.from("rsvp_confirmations").insert({
-      user_id: userId,
-      guests_count: guestsCount,
-      message: message,
-    })
-
-    if (rsvpError) {
-      console.error("Error creando RSVP:", rsvpError)
-      return { error: "Error al confirmar asistencia" }
-    }
-
-    return { success: true, message: "RSVP confirmado exitosamente" }
+    return data.setting_value
   } catch (error) {
-    console.error("Error en submitRSVP:", error)
-    return { error: "Error interno del servidor" }
+    console.error("Error obteniendo mensaje:", error)
+    return "Gracias por confirmar tu asistencia. Nos vemos pronto."
   }
 }

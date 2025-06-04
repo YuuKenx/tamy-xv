@@ -4,7 +4,7 @@ import type React from "react"
 
 import { motion } from "framer-motion"
 import { sendRsvp } from "@/app/actions"
-import { Check, Loader2 } from 'lucide-react'
+import { Check, Loader2 } from "lucide-react"
 
 const RsvpForm = () => {
   const [formState, setFormState] = useState({
@@ -18,6 +18,7 @@ const RsvpForm = () => {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string>("")
+  const [credentials, setCredentials] = useState<{ username: string; password: string } | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -31,25 +32,26 @@ const RsvpForm = () => {
 
     try {
       const result = await sendRsvp(formState)
-      setStatus("success")
-      
-      // Mostrar credenciales generadas
-      if (result.credentials) {
-        setSuccessMessage(`¡Gracias por confirmar! 
-        
-Tu usuario: ${result.credentials.username}
-Tu contraseña: ${result.credentials.password}
 
-Guarda estas credenciales para acceder a la galería de fotos después del evento.`)
+      if (result.success) {
+        setStatus("success")
+        setSuccessMessage(result.message || "¡Gracias por confirmar tu asistencia!")
+
+        if (result.credentials) {
+          setCredentials(result.credentials)
+        }
+
+        setFormState({
+          name: "",
+          email: "",
+          phone: "",
+          guests: "1",
+          message: "",
+        })
+      } else {
+        setStatus("error")
+        setError(result.message || "Hubo un error al enviar tu confirmación. Por favor intenta de nuevo.")
       }
-      
-      setFormState({
-        name: "",
-        email: "",
-        phone: "",
-        guests: "1",
-        message: "",
-      })
     } catch (err) {
       setStatus("error")
       setError("Hubo un error al enviar tu confirmación. Por favor intenta de nuevo.")
@@ -80,9 +82,26 @@ Guarda estas credenciales para acceder a la galería de fotos después del event
               <Check size={32} className="text-green-600" />
             </div>
             <h3 className="text-2xl font-bold text-green-700 mb-4">¡Gracias por confirmar!</h3>
-            <div className="text-green-600 whitespace-pre-line">
-              {successMessage}
-            </div>
+            <div className="text-green-600 mb-6">{successMessage}</div>
+
+            {credentials && (
+              <div className="bg-white p-6 rounded-lg shadow-sm mb-6 max-w-md mx-auto">
+                <h4 className="font-bold text-gray-700 mb-3">Tus credenciales de acceso</h4>
+                <div className="text-left mb-4">
+                  <p className="text-gray-600 mb-1">
+                    <span className="font-medium">Usuario:</span> {credentials.username}
+                  </p>
+                  <p className="text-gray-600">
+                    <span className="font-medium">Contraseña:</span> {credentials.password}
+                  </p>
+                </div>
+                <p className="text-sm text-pink-600">
+                  Guarda estas credenciales para acceder a la galería de fotos después del evento.
+                </p>
+              </div>
+            )}
+
+            <p className="text-gray-600">Nos vemos el 9 de agosto para celebrar juntos este día tan especial.</p>
           </motion.div>
         ) : (
           <motion.form
@@ -106,7 +125,7 @@ Guarda estas credenciales para acceder a la galería de fotos después del event
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                  placeholder="Tu nombre"
+                  placeholder="Tu nombre completo"
                 />
               </div>
 
@@ -156,6 +175,8 @@ Guarda estas credenciales para acceder a la galería de fotos después del event
                   <option value="2">2 personas</option>
                   <option value="3">3 personas</option>
                   <option value="4">4 personas</option>
+                  <option value="5">5 personas</option>
+                  <option value="6">6 personas</option>
                 </select>
               </div>
             </div>
