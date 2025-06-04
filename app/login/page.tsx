@@ -55,11 +55,19 @@ export default function LoginPage() {
         console.log("Login exitoso, redirigiendo...", { userType: result.session.userType })
 
         // Redirigir según tipo de usuario
-        if (result.session.userType === "admin" || result.session.userType === "host") {
+        console.log("Tipo de usuario:", result.session.userType)
+        if (
+          result.session.userType === "admin" ||
+          result.session.userType === "host" ||
+          result.session.userType === "super_admin"
+        ) {
+          console.log("Redirigiendo a admin dashboard")
           router.push("/admin/dashboard")
         } else if (result.session.galleryEnabled) {
+          console.log("Redirigiendo a galería")
           router.push("/gallery/upload")
         } else {
+          console.log("Redirigiendo a sala de espera")
           router.push("/waiting-room")
         }
       } else {

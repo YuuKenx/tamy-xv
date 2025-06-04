@@ -94,7 +94,7 @@ export async function loginAction(formData: {
       userId: confirmation.id,
       guestId: confirmation.invited_guest_id,
       fullName: confirmation.invited_guests.full_name,
-      userType: confirmation.invited_guests.guest_type,
+      userType: confirmation.invited_guests.guest_type === "admin" ? "host" : confirmation.invited_guests.guest_type,
       sessionToken: crypto.randomUUID(),
       galleryEnabled: false, // Por ahora false, luego verificaremos
     }
