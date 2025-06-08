@@ -14,6 +14,7 @@ import GiftRegistry from "@/components/gift-registry"
 import GallerySection from "@/components/gallery-section"
 import CountdownSection from "@/components/countdown-section"
 import DressCode from "@/components/dress-code"
+import GodparentsCarousel from "@/components/godparents-carousel"
 import MusicPlayer, { type MusicPlayerRef } from "@/components/music-player"
 import { Montserrat } from "next/font/google"
 import { useRouter } from "next/navigation"
@@ -183,6 +184,8 @@ export default function Home() {
 
         <DressCode />
 
+        <GodparentsCarousel />
+
         <Itinerary />
 
         {/* Galería condicional */}
@@ -195,6 +198,9 @@ export default function Home() {
         <footer className="text-center py-6 md:py-8 text-pink-700 mt-8 md:mt-16">
           <p className="text-sm md:text-base">Con cariño esperamos tu presencia en este día tan especial</p>
           <p className="mt-2 text-xs md:text-sm">© {new Date().getFullYear()} - XV Años de Tamara</p>
+          <p className="mt-3 text-xs text-pink-600 italic">
+            Madrina de invitación digital: RED (Guadalupe Ramírez Hernández)
+          </p>
         </footer>
       </div>
     </main>
