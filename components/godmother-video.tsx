@@ -110,7 +110,7 @@ const GodmotherVideo = ({ onVideoPlay, onVideoEnd }: GodmotherVideoProps) => {
             playsInline
             controls
           >
-            <source src="/video/mensaje.mp4" type="video/mp4" />
+            <source src="/videos/mensaje.mp4" type="video/mp4" />
             Tu navegador no soporta videos HTML5.
           </video>
 

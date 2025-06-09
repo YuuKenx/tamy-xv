@@ -34,8 +34,7 @@ export async function sendRsvp(formData: RsvpFormData) {
       }
     }
 
-    // Aquí normalmente guardarías en una base de datos
-    // Por ahora simularemos el guardado
+    // Guardar la confirmación (aquí podrías usar una base de datos simple o un servicio)
     console.log("Confirmación RSVP recibida:", {
       name: formData.name,
       email: formData.email,

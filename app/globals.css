@@ -24,6 +24,9 @@
     --input: 240 5.9% 90%;
     --ring: 330 81% 60%;
     --radius: 0.5rem;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
   }
 
   .dark {
@@ -55,6 +58,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    color: rgb(var(--foreground-rgb));
+    background: white;
   }
 }
 
