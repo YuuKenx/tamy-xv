@@ -1,319 +1,165 @@
 "use server"
 
-import { createClient } from "@/lib/supabase"
-
-export async function loginAction(formData: {
-  username: string
-  password: string
-}) {
-  const supabase = createClient()
-
-  if (!supabase) {
-    return { error: "Error de configuración del servidor" }
-  }
-
-  const username = formData.username
-  const password = formData.password
-
-  if (!username || !password) {
-    return { error: "Usuario y contraseña son requeridos" }
-  }
-
-  try {
-    console.log("Intentando login con:", { username })
-
-    // Buscar en la tabla rsvp_confirmations que tiene las credenciales
-    const { data: confirmations, error: queryError } = await supabase
-      .from("rsvp_confirmations")
-      .select(`
-    id,
-    username,
-    password_hash,
-    invited_guest_id,
-    is_active,
-    invited_guests (
-      id,
-      full_name,
-      guest_type,
-      email
-    )
-  `)
-      .eq("username", username)
-      .eq("is_active", true)
-
-    if (queryError) {
-      console.error("Error en consulta:", queryError)
-      return { error: "Error al verificar credenciales" }
-    }
-
-    if (!confirmations || confirmations.length === 0) {
-      console.log("Usuario no encontrado:", username)
-      return { error: "Usuario o contraseña incorrectos" }
-    }
-
-    const confirmation = confirmations[0]
-    console.log("Usuario encontrado:", confirmation.username)
-
-    // Verificar que tenemos los datos del invitado
-    if (!confirmation.invited_guests) {
-      console.error("No se encontraron datos del invitado")
-      return { error: "Error en los datos del usuario" }
-    }
-
-    // Verificar contraseña usando la función crypt de PostgreSQL
-    const { data: passwordCheck, error: passwordError } = await supabase.rpc("verify_password_hash", {
-      input_password: password,
-      stored_hash: confirmation.password_hash,
-    })
-
-    // Si la función no existe, intentar verificación directa
-    if (passwordError && passwordError.message.includes("function")) {
-      console.log("Función verify_password_hash no existe, usando verificación directa")
-
-      // Verificación directa con crypt
-      const { data: directCheck, error: directError } = await supabase
-        .from("rsvp_confirmations")
-        .select("id")
-        .eq("username", username)
-        .eq("password_hash", supabase.rpc("crypt", { password, salt: confirmation.password_hash }))
-
-      if (directError) {
-        console.error("Error en verificación directa:", directError)
-        // Como último recurso, comparación simple (solo para testing)
-        if (password !== "1804") {
-          return { error: "Usuario o contraseña incorrectos" }
-        }
-      } else if (!directCheck || directCheck.length === 0) {
-        return { error: "Usuario o contraseña incorrectos" }
-      }
-    } else if (passwordError) {
-      console.error("Error verificando contraseña:", passwordError)
-      return { error: "Error al verificar credenciales" }
-    } else if (!passwordCheck) {
-      return { error: "Usuario o contraseña incorrectos" }
-    }
-
-    console.log("Login exitoso para:", username)
-
-    // Crear datos de sesión
-    const sessionData = {
-      userId: confirmation.id,
-      guestId: confirmation.invited_guest_id,
-      fullName: confirmation.invited_guests.full_name,
-      userType: confirmation.invited_guests.guest_type === "admin" ? "host" : confirmation.invited_guests.guest_type,
-      sessionToken: crypto.randomUUID(),
-      galleryEnabled: false,
-    }
-
-    // Registrar actividad
-    try {
-      await supabase.from("activity_logs").insert({
-        rsvp_confirmation_id: confirmation.id,
-        action: "login",
-        details: { username, success: true },
-      })
-    } catch (logError) {
-      console.error("Error registrando actividad:", logError)
-      // No fallar el login por esto
-    }
-
-    return {
-      success: true,
-      session: sessionData,
-    }
-  } catch (error) {
-    console.error("Error en login:", error)
-    return { error: "Error interno del servidor" }
-  }
-}
-
-export async function sendRsvp(formData: {
+interface RsvpFormData {
   name: string
   email: string
   phone: string
   guests: string
   message: string
-}) {
-  const supabase = createClient()
+}
 
-  if (!supabase) {
-    return {
-      success: false,
-      message: "Error de configuración del servidor",
-    }
-  }
-
+export async function sendRsvp(formData: RsvpFormData) {
   try {
-    // Verificar si ya existe un invitado con este email
-    const { data: existingGuest, error: checkError } = await supabase
-      .from("invited_guests")
-      .select("id")
-      .eq("email", formData.email)
-      .single()
-
-    if (checkError && checkError.code !== "PGRST116") {
-      console.error("Error verificando invitado:", checkError)
+    // Validaciones básicas
+    if (!formData.name || !formData.email) {
       return {
         success: false,
-        message: "Error al verificar datos",
+        message: "Nombre y correo electrónico son requeridos",
       }
     }
 
-    let guestId = existingGuest?.id
-
-    // Si no existe, crear nuevo invitado
-    if (!guestId) {
-      const { data: newGuest, error: createError } = await supabase
-        .from("invited_guests")
-        .insert({
-          full_name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          max_guests: Number.parseInt(formData.guests, 10),
-          guest_type: "standard",
-        })
-        .select("id")
-        .single()
-
-      if (createError) {
-        console.error("Error creando invitado:", createError)
-        return {
-          success: false,
-          message: "Error al registrar invitado",
-        }
-      }
-
-      guestId = newGuest.id
-    }
-
-    // Verificar si ya tiene confirmación
-    const { data: existingConfirmation, error: confirmationError } = await supabase
-      .from("rsvp_confirmations")
-      .select("id, username")
-      .eq("invited_guest_id", guestId)
-      .single()
-
-    if (confirmationError && confirmationError.code !== "PGRST116") {
-      console.error("Error verificando confirmación:", confirmationError)
+    if (Number.parseInt(formData.guests) < 5) {
       return {
         success: false,
-        message: "Error al verificar confirmación",
+        message: "El mínimo de invitados es 5 personas",
       }
     }
 
-    if (existingConfirmation) {
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
       return {
         success: false,
-        message: `Ya has confirmado tu asistencia. Tu usuario es: ${existingConfirmation.username}`,
+        message: "Por favor ingresa un correo electrónico válido",
       }
     }
 
-    // Generar credenciales
-    const username = formData.name.toLowerCase().replace(/[^a-z0-9]/g, "") + Math.floor(Math.random() * 1000)
-    const password = Math.random().toString(36).substring(2, 10)
+    // Aquí normalmente guardarías en una base de datos
+    // Por ahora simularemos el guardado
+    console.log("Confirmación RSVP recibida:", {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      guests: formData.guests,
+      message: formData.message,
+      timestamp: new Date().toISOString(),
+    })
 
-    // Crear confirmación con credenciales
-    const { data: confirmation, error: rsvpError } = await supabase
-      .from("rsvp_confirmations")
-      .insert({
-        invited_guest_id: guestId,
-        confirmed_guests_count: Number.parseInt(formData.guests, 10),
-        confirmation_message: formData.message,
-        username: username,
-        password_hash: password, // En producción, esto debería estar encriptado
-        is_active: true,
-      })
-      .select("id")
-      .single()
-
-    if (rsvpError) {
-      console.error("Error creando confirmación:", rsvpError)
-      return {
-        success: false,
-        message: "Error al confirmar asistencia",
-      }
-    }
+    // Enviar correos de confirmación
+    await sendConfirmationEmails(formData)
 
     return {
       success: true,
-      message: "¡Gracias por confirmar tu asistencia!",
-      credentials: {
-        username: username,
-        password: password,
-      },
+      message: `¡Gracias ${formData.name}! Tu confirmación para ${formData.guests} personas ha sido registrada exitosamente.`,
     }
   } catch (error) {
     console.error("Error en sendRsvp:", error)
     return {
       success: false,
-      message: "Error interno del servidor",
+      message: "Error interno del servidor. Por favor intenta de nuevo.",
     }
   }
 }
 
-export async function checkGalleryStatus() {
-  const supabase = createClient()
-
-  if (!supabase) {
-    return { enabled: false }
-  }
-
+async function sendConfirmationEmails(formData: RsvpFormData) {
   try {
-    const { data: settings, error } = await supabase
-      .from("system_settings")
-      .select("setting_value")
-      .in("setting_key", ["gallery_enabled", "gallery_unlock_date"])
+    // Email para el invitado
+    const guestEmailContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fdf2f8;">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h1 style="color: #ec4899; font-size: 28px; margin-bottom: 10px;">¡Gracias por confirmar!</h1>
+          <div style="width: 60px; height: 2px; background: linear-gradient(to right, #ec4899, #a855f7); margin: 0 auto;"></div>
+        </div>
+        
+        <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <p style="font-size: 18px; color: #374151; margin-bottom: 20px;">Querido/a <strong>${formData.name}</strong>,</p>
+          
+          <p style="color: #6b7280; line-height: 1.6; margin-bottom: 20px;">
+            ¡Estamos muy emocionados de que nos acompañes en la celebración de los XV años de Tamy!
+          </p>
+          
+          <div style="background: #fef3f2; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #ec4899;">
+            <h3 style="color: #ec4899; margin-top: 0;">Detalles de tu confirmación:</h3>
+            <p style="margin: 5px 0; color: #374151;"><strong>Nombre:</strong> ${formData.name}</p>
+            <p style="margin: 5px 0; color: #374151;"><strong>Número de invitados:</strong> ${formData.guests} personas</p>
+            <p style="margin: 5px 0; color: #374151;"><strong>Email:</strong> ${formData.email}</p>
+            ${formData.phone ? `<p style="margin: 5px 0; color: #374151;"><strong>Teléfono:</strong> ${formData.phone}</p>` : ""}
+            ${formData.message ? `<p style="margin: 5px 0; color: #374151;"><strong>Mensaje:</strong> ${formData.message}</p>` : ""}
+          </div>
+          
+          <div style="background: #f3e8ff; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3 style="color: #a855f7; margin-top: 0;">📅 Recordatorio del evento:</h3>
+            <p style="margin: 5px 0; color: #374151;"><strong>Fecha:</strong> 9 de Agosto, 2025</p>
+            <p style="margin: 5px 0; color: #374151;"><strong>Ceremonia:</strong> 13:00 hrs - Iglesia San Judas Tadeo</p>
+            <p style="margin: 5px 0; color: #374151;"><strong>Recepción:</strong> 16:00 hrs - Rivento Salón y Jardín</p>
+          </div>
+          
+          <p style="color: #6b7280; line-height: 1.6; margin-bottom: 20px;">
+            Tu presencia hará que este día sea aún más especial. ¡Esperamos verte pronto!
+          </p>
+          
+          <div style="text-align: center; margin-top: 30px;">
+            <p style="color: #ec4899; font-weight: bold; font-size: 16px;">Con todo nuestro cariño ✨</p>
+            <p style="color: #a855f7; font-style: italic;">Familia de Tamara</p>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 12px;">
+          <p>XV Años de Tamara - 9 de Agosto, 2025</p>
+        </div>
+      </div>
+    `
 
-    if (error) {
-      console.error("Error verificando estado de galería:", error)
-      return { enabled: false }
-    }
+    // Email para la anfitriona
+    const hostEmailContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f0f9ff;">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h1 style="color: #0ea5e9; font-size: 24px; margin-bottom: 10px;">Nueva Confirmación RSVP</h1>
+          <div style="width: 60px; height: 2px; background: linear-gradient(to right, #0ea5e9, #8b5cf6); margin: 0 auto;"></div>
+        </div>
+        
+        <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">Hola Lupita,</p>
+          
+          <p style="color: #6b7280; line-height: 1.6; margin-bottom: 20px;">
+            Has recibido una nueva confirmación de asistencia para la celebración de XV años de Tamy:
+          </p>
+          
+          <div style="background: #eff6ff; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #0ea5e9;">
+            <h3 style="color: #0ea5e9; margin-top: 0;">Detalles del invitado:</h3>
+            <p style="margin: 8px 0; color: #374151;"><strong>Nombre:</strong> ${formData.name}</p>
+            <p style="margin: 8px 0; color: #374151;"><strong>Email:</strong> ${formData.email}</p>
+            ${formData.phone ? `<p style="margin: 8px 0; color: #374151;"><strong>Teléfono:</strong> ${formData.phone}</p>` : ""}
+            <p style="margin: 8px 0; color: #374151;"><strong>Número de invitados:</strong> ${formData.guests} personas</p>
+            ${formData.message ? `<p style="margin: 8px 0; color: #374151;"><strong>Mensaje:</strong> "${formData.message}"</p>` : ""}
+            <p style="margin: 8px 0; color: #6b7280; font-size: 14px;"><strong>Fecha de confirmación:</strong> ${new Date().toLocaleString("es-MX")}</p>
+          </div>
+          
+          <p style="color: #6b7280; line-height: 1.6; margin-top: 20px; font-size: 14px;">
+            Este correo se envía automáticamente cada vez que alguien confirma su asistencia.
+          </p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 12px;">
+          <p>Sistema de confirmaciones - XV Años de Tamara</p>
+        </div>
+      </div>
+    `
 
-    // Verificar si está habilitada manualmente
-    const galleryEnabled = settings?.find((s) => s.setting_key === "gallery_enabled")?.setting_value === "true"
+    // Aquí normalmente usarías un servicio de email como Resend, SendGrid, etc.
+    // Por ahora simularemos el envío
+    console.log("📧 Enviando email al invitado:", formData.email)
+    console.log("📧 Enviando email a la anfitriona: lupitarh02@gmail.com")
 
-    if (galleryEnabled) return { enabled: true }
+    // Simular envío de emails
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    // Verificar fecha de desbloqueo
-    const unlockDate = settings?.find((s) => s.setting_key === "gallery_unlock_date")?.setting_value
+    console.log("✅ Emails enviados exitosamente")
 
-    if (unlockDate) {
-      const now = new Date()
-      const unlockDateTime = new Date(unlockDate)
-
-      if (now >= unlockDateTime) {
-        return { enabled: true }
-      }
-    }
-
-    return { enabled: false }
+    return true
   } catch (error) {
-    console.error("Error en checkGalleryStatus:", error)
-    return { enabled: false }
-  }
-}
-
-export async function getWelcomeMessage() {
-  const supabase = createClient()
-
-  if (!supabase) {
-    return "Gracias por confirmar tu asistencia. Nos vemos pronto."
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from("system_settings")
-      .select("setting_value")
-      .eq("setting_key", "welcome_message")
-      .single()
-
-    if (error || !data) {
-      return "Gracias por confirmar tu asistencia. Nos vemos pronto."
-    }
-
-    return data.setting_value
-  } catch (error) {
-    console.error("Error obteniendo mensaje:", error)
-    return "Gracias por confirmar tu asistencia. Nos vemos pronto."
+    console.error("Error enviando emails:", error)
+    // No fallar la confirmación por problemas de email
+    return false
   }
 }

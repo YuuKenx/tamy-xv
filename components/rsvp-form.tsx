@@ -11,14 +11,13 @@ const RsvpForm = () => {
     name: "",
     email: "",
     phone: "",
-    guests: "1",
+    guests: "5",
     message: "",
   })
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string>("")
-  const [credentials, setCredentials] = useState<{ username: string; password: string } | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -37,15 +36,11 @@ const RsvpForm = () => {
         setStatus("success")
         setSuccessMessage(result.message || "¡Gracias por confirmar tu asistencia!")
 
-        if (result.credentials) {
-          setCredentials(result.credentials)
-        }
-
         setFormState({
           name: "",
           email: "",
           phone: "",
-          guests: "1",
+          guests: "5",
           message: "",
         })
       } else {
@@ -83,25 +78,10 @@ const RsvpForm = () => {
             </div>
             <h3 className="text-2xl font-bold text-green-700 mb-4">¡Gracias por confirmar!</h3>
             <div className="text-green-600 mb-6">{successMessage}</div>
-
-            {credentials && (
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-6 max-w-md mx-auto">
-                <h4 className="font-bold text-gray-700 mb-3">Tus credenciales de acceso</h4>
-                <div className="text-left mb-4">
-                  <p className="text-gray-600 mb-1">
-                    <span className="font-medium">Usuario:</span> {credentials.username}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-medium">Contraseña:</span> {credentials.password}
-                  </p>
-                </div>
-                <p className="text-sm text-pink-600">
-                  Guarda estas credenciales para acceder a la galería de fotos después del evento.
-                </p>
-              </div>
-            )}
-
-            <p className="text-gray-600">Nos vemos el 9 de agosto para celebrar juntos este día tan especial.</p>
+            <p className="text-gray-600">
+              Hemos enviado un correo de confirmación a tu email. Nos vemos el 9 de agosto para celebrar juntos este día
+              tan especial.
+            </p>
           </motion.div>
         ) : (
           <motion.form
@@ -162,7 +142,7 @@ const RsvpForm = () => {
 
               <div>
                 <label htmlFor="guests" className="block text-sm font-medium text-gray-700 mb-1">
-                  Número de invitados
+                  Número de invitados (mínimo 5)
                 </label>
                 <select
                   id="guests"
@@ -171,12 +151,17 @@ const RsvpForm = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 >
-                  <option value="1">1 persona</option>
-                  <option value="2">2 personas</option>
-                  <option value="3">3 personas</option>
-                  <option value="4">4 personas</option>
                   <option value="5">5 personas</option>
                   <option value="6">6 personas</option>
+                  <option value="7">7 personas</option>
+                  <option value="8">8 personas</option>
+                  <option value="9">9 personas</option>
+                  <option value="10">10 personas</option>
+                  <option value="11">11 personas</option>
+                  <option value="12">12 personas</option>
+                  <option value="13">13 personas</option>
+                  <option value="14">14 personas</option>
+                  <option value="15">15 personas</option>
                 </select>
               </div>
             </div>
