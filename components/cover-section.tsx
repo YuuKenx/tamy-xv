@@ -103,44 +103,6 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           </svg>
         </div>
       </motion.div>
-
-      <style jsx>{`
-        .titulo-3d {
-          background: linear-gradient(135deg, #b76e79, #f7cac9, #e8b4b8, #d4a5a8);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          text-shadow: 
-            1px 1px 2px rgba(183, 110, 121, 0.4),
-            2px 2px 4px rgba(183, 110, 121, 0.3),
-            3px 3px 6px rgba(183, 110, 121, 0.2),
-            4px 4px 8px rgba(183, 110, 121, 0.1);
-          animation: flotar 3s ease-in-out infinite;
-          filter: drop-shadow(0 0 10px rgba(183, 110, 121, 0.3));
-        }
-
-        .nombre-3d {
-          background: linear-gradient(135deg, #b76e79, #f7cac9, #e8b4b8);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          text-shadow: 
-            1px 1px 2px rgba(183, 110, 121, 0.4),
-            2px 2px 4px rgba(183, 110, 121, 0.3),
-            3px 3px 6px rgba(183, 110, 121, 0.2);
-          animation: flotar 4s ease-in-out infinite;
-          filter: drop-shadow(0 0 8px rgba(183, 110, 121, 0.2));
-        }
-
-        @keyframes flotar {
-          0%, 100% {
-            transform: translateY(0) rotateX(0deg);
-          }
-          50% {
-            transform: translateY(-15px) rotateX(5deg);
-          }
-        }
-      `}</style>
     </section>
   )
 }
