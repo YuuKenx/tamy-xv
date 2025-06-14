@@ -43,7 +43,7 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 1 }}
-          className="text-4xl md:text-6xl lg:text-8xl font-bold text-pink-600 mb-6"
+          className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 titulo-3d"
         >
           XV Años
         </motion.h1>
@@ -65,7 +65,7 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.8 }}
-          className="text-3xl md:text-4xl lg:text-5xl font-semibold text-pink-500 mb-4"
+          className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-4 nombre-3d"
         >
           Tamy
         </motion.h2>
@@ -78,26 +78,12 @@ const CoverSection = ({ name }: CoverSectionProps) => {
         >
           9 de Agosto, 2025
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2, duration: 0.8 }}
-          className="mt-8 md:mt-12"
-        >
-          <a
-            href="#itinerary"
-            className="px-6 md:px-8 py-2 md:py-3 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors shadow-md text-sm md:text-base"
-          >
-            Ver detalles
-          </a>
-        </motion.div>
       </motion.div>
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.5, duration: 1 }}
+        transition={{ delay: 2, duration: 1 }}
         className="absolute bottom-4 md:bottom-8 left-0 right-0 flex justify-center"
       >
         <div className="animate-bounce">
@@ -117,6 +103,44 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           </svg>
         </div>
       </motion.div>
+
+      <style jsx>{`
+        .titulo-3d {
+          background: linear-gradient(135deg, #b76e79, #f7cac9, #e8b4b8, #d4a5a8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 
+            1px 1px 2px rgba(183, 110, 121, 0.4),
+            2px 2px 4px rgba(183, 110, 121, 0.3),
+            3px 3px 6px rgba(183, 110, 121, 0.2),
+            4px 4px 8px rgba(183, 110, 121, 0.1);
+          animation: flotar 3s ease-in-out infinite;
+          filter: drop-shadow(0 0 10px rgba(183, 110, 121, 0.3));
+        }
+
+        .nombre-3d {
+          background: linear-gradient(135deg, #b76e79, #f7cac9, #e8b4b8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 
+            1px 1px 2px rgba(183, 110, 121, 0.4),
+            2px 2px 4px rgba(183, 110, 121, 0.3),
+            3px 3px 6px rgba(183, 110, 121, 0.2);
+          animation: flotar 4s ease-in-out infinite;
+          filter: drop-shadow(0 0 8px rgba(183, 110, 121, 0.2));
+        }
+
+        @keyframes flotar {
+          0%, 100% {
+            transform: translateY(0) rotateX(0deg);
+          }
+          50% {
+            transform: translateY(-15px) rotateX(5deg);
+          }
+        }
+      `}</style>
     </section>
   )
 }

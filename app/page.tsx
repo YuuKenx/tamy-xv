@@ -6,9 +6,11 @@ import FloatingHearts from "@/components/floating-hearts"
 import CountdownModal from "@/components/countdown-modal"
 import CoverSection from "@/components/cover-section"
 import FamilyPhotos from "@/components/family-photos"
+import ParentsMessages from "@/components/parents-messages"
 import QuinceaneraMesage from "@/components/parents-message"
 import Itinerary from "@/components/itinerary"
 import GodmotherVideo from "@/components/godmother-video"
+import GodmotherMessage from "@/components/godmother-message"
 import RsvpForm from "@/components/rsvp-form"
 import GiftRegistry from "@/components/gift-registry"
 import CountdownSection from "@/components/countdown-section"
@@ -68,9 +70,16 @@ export default function Home() {
 
         <FamilyPhotos />
 
-        {/* Video del hada madrina ANTES del mensaje de la quinceañera */}
+        {/* Mensajes de los papás después de las fotos familiares */}
+        <ParentsMessages />
+
+        {/* Video del hada madrina */}
         <GodmotherVideo onVideoPlay={handleVideoPlay} onVideoEnd={handleVideoEnd} />
 
+        {/* Mensaje de la madrina */}
+        <GodmotherMessage />
+
+        {/* Mensaje de la quinceañera */}
         <QuinceaneraMesage />
 
         <DressCode />

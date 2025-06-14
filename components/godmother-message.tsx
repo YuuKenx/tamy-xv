@@ -24,17 +24,28 @@ const GodmotherMessage = () => {
         >
           <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-300 to-pink-300"></div>
 
-          <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-            Con gran alegría y emoción, acepto ser parte de este momento tan especial en la vida de mi querida Tamy.
+          <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
+            <span className="font-semibold text-purple-600">Querida Tamy:</span>
           </p>
+
+          <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
+            Hoy que celebras tus XV años, doy gracias a Dios por tu vida y por permitirme ser parte de este momento tan
+            especial. Es un honor para mí acompañarte como madrina de velación, guiándote con cariño, fe y confianza en
+            este nuevo camino hacia tu juventud.
+          </p>
+
+          <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
+            Que nunca te falte el amor, la alegría, ni la luz para tomar decisiones sabias. Siempre estoy aquí para ti,
+            con los brazos abiertos y el corazón lleno de bendiciones.
+          </p>
+
           <p className="text-lg md:text-xl text-gray-700 italic mb-8 leading-relaxed">
-            "Ser tu madrina es un honor que llevo en el corazón. Estaré a tu lado no solo en esta celebración, sino en
-            cada paso importante de tu vida, brindándote mi apoyo, cariño y guía."
+            Te amo y siempre contarás conmigo.
           </p>
 
           <div className="mt-8 text-purple-600 font-medium">
             <p>Con todo mi cariño,</p>
-            <p className="mt-2 text-xl">Mariana</p>
+            <p className="mt-2 text-xl">Tu tía y madrina Mariana</p>
           </div>
         </motion.div>
       </div>
