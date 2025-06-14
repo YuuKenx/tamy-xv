@@ -40,7 +40,7 @@ const Itinerary = () => {
       calendarUrl:
         "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Misa+de+XV+a%C3%B1os+de+Tamy&dates=20250809T180000Z/20250809T190000Z&details=Te+esperamos+en+la+iglesia+de+San+Judas+Tadeo%2C+Carboneras%2C+Mineral+de+la+Reforma%2C+Hidalgo.+Ubicaci%C3%B3n+exacta%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DIglesia%2BSan%2BJudas%2BTadeo%2BCarboneras%2BMineral%2Bde%2Bla%2BReforma%2BHidalgo&location=Judas+Tadeo+166%2C+Carboneras%2C+CP+42180%2C+Mineral+de+la+Reforma%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-30,reminder-1440",
       icon: <Calendar className="w-6 h-6" />,
-      image: "/images/iglesia.jpg",
+      image: "/image/iglesia.jpg",
       color: "from-pink-400 to-pink-600",
     },
     {
@@ -55,7 +55,7 @@ const Itinerary = () => {
       calendarUrl:
         "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Recepci%C3%B3n+para+Fiesta+de+Tamy&dates=20250809T203000Z/20250810T010000Z&details=Te+esperamos+en+la+recepci%C3%B3n+de+los+XV+a%C3%B1os+de+Tamy+en+Rivento+Sal%C3%B3n+y+Jard%C3%ADn%2C+Pachuquilla.+Ubicaci%C3%B3n%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DRivento%2BSalon%2BJardin%2BPachuquilla%2BHidalgo&location=Carr.+a+Petr%C3%B3leos+%23200%2C+Centro%2C+42180+Pachuquilla%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-30,reminder-1440",
       icon: <Music className="w-6 h-6" />,
-      image: "/images/salon.jpg",
+      image: "/image/salon.jpg",
       color: "from-purple-400 to-purple-600",
     },
     {
@@ -70,7 +70,7 @@ const Itinerary = () => {
       calendarUrl:
         "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Recepci%C3%B3n+para+Fiesta+de+Tamy&dates=20250809T203000Z/20250810T010000Z&details=Te+esperamos+en+la+recepci%C3%B3n+de+los+XV+a%C3%B1os+de+Tamy+en+Rivento+Sal%C3%B3n+y+Jard%C3%ADn%2C+Pachuquilla.+Ubicaci%C3%B3n%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DRivento%2BSalon%2BJardin%2BPachuquilla%2BHidalgo&location=Carr.+a+Petr%C3%B3leos+%23200%2C+Centro%2C+42180+Pachuquilla%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-30,reminder-1440",
       icon: <Cake className="w-6 h-6" />,
-      image: "/images/salon.jpg",
+      image: "/image/salon.jpg",
       color: "from-rose-400 to-rose-600",
     },
   ]
