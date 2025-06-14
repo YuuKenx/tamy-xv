@@ -43,7 +43,17 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 1 }}
-          className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 titulo-3d"
+          className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6"
+          style={{
+            background: "linear-gradient(135deg, #b76e79, #f7cac9)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            textShadow:
+              "1px 1px 2px rgba(183, 110, 121, 0.4), 2px 2px 4px rgba(183, 110, 121, 0.3), 3px 3px 6px rgba(183, 110, 121, 0.2)",
+            animation: "flotar 3s ease-in-out infinite",
+            fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+          }}
         >
           XV Años
         </motion.h1>
@@ -65,7 +75,17 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.8 }}
-          className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-4 nombre-3d"
+          className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-4"
+          style={{
+            background: "linear-gradient(135deg, #b76e79, #f7cac9)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            textShadow:
+              "1px 1px 2px rgba(183, 110, 121, 0.4), 2px 2px 4px rgba(183, 110, 121, 0.3), 3px 3px 6px rgba(183, 110, 121, 0.2)",
+            animation: "flotar 4s ease-in-out infinite",
+            fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+          }}
         >
           Tamy
         </motion.h2>
@@ -103,6 +123,17 @@ const CoverSection = ({ name }: CoverSectionProps) => {
           </svg>
         </div>
       </motion.div>
+
+      <style jsx>{`
+        @keyframes flotar {
+          0%, 100% {
+            transform: translateY(0) rotateX(0deg);
+          }
+          50% {
+            transform: translateY(-15px) rotateX(5deg);
+          }
+        }
+      `}</style>
     </section>
   )
 }
