@@ -122,7 +122,7 @@ export default function WaitingRoomPage() {
             </div>
             <div className="flex items-center justify-center gap-2 text-purple-600">
               <Clock size={20} />
-              <span className="font-medium">Recepción: 16:00 hrs</span>
+              <span className="font-medium">Recepción:  16:00 hrs</span>
             </div>
           </div>
         </motion.div>
