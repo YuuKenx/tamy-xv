@@ -16,7 +16,7 @@ import GiftRegistry from "@/components/gift-registry"
 import CountdownSection from "@/components/countdown-section"
 import DressCode from "@/components/dress-code"
 import GodparentsCarousel from "@/components/godparents-carousel"
-import MusicPlayer, { type MusicPlayerRef } from "@/components/music-player"
+import SimpleMusicPlayer, { type SimpleMusicPlayerRef } from "@/components/simple-music-player"
 import { Montserrat } from "next/font/google"
 
 const montserrat = Montserrat({
@@ -25,9 +25,10 @@ const montserrat = Montserrat({
 })
 
 export default function Home() {
-  const musicPlayerRef = useRef<MusicPlayerRef>(null)
+  const musicPlayerRef = useRef<SimpleMusicPlayerRef>(null)
 
   const handleCountdownClose = () => {
+    // Iniciar música automáticamente cuando se cierre el modal
     if (musicPlayerRef.current) {
       musicPlayerRef.current.startMusic()
     }
@@ -52,7 +53,7 @@ export default function Home() {
       <StarBackground />
       <FloatingHearts />
       <CountdownModal targetDate="2025-08-09T13:00:00" onClose={handleCountdownClose} />
-      <MusicPlayer ref={musicPlayerRef} />
+      <SimpleMusicPlayer ref={musicPlayerRef} />
 
       {/* Logo fijo en la esquina superior izquierda */}
       <div className="fixed top-4 left-4 z-50">
