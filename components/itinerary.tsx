@@ -46,7 +46,7 @@ const Itinerary = () => {
     {
       id: 2,
       time: "16:00",
-      title: "Recepción y Vals",
+      title: "Recepción",
       location: "Rivento Salón y Jardín",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
       description:

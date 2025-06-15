@@ -22,7 +22,7 @@ const GiftRegistry = () => {
     },
     {
       id: 3,
-      title: "Cofre para Lluvia de Sobres",
+      title: "Cofre para Sobres",
       icon: <CreditCard size={32} />,
       description: "Si prefieres dar un regalo en efectivo, habrá un buzón en la mesa de regalos.",
       link: null,
