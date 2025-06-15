@@ -8,13 +8,17 @@ const GodparentsCarousel = () => {
       role: "Pastel",
       name: "Jacqueline Hernández Callejas",
       svgIcon: (
-        <svg viewBox="0 0 100 100" className="w-16 h-16">
-          <rect x="25" y="60" width="50" height="20" rx="2" fill="currentColor" opacity="0.8" />
-          <rect x="30" y="45" width="40" height="15" rx="2" fill="currentColor" opacity="0.9" />
-          <rect x="35" y="30" width="30" height="15" rx="2" fill="currentColor" />
-          <rect x="48" y="20" width="4" height="10" fill="currentColor" opacity="0.7" />
-          <circle cx="50" cy="18" r="2" fill="currentColor" />
-        </svg>
+        <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <svg viewBox="0 0 100 100" className="w-10 h-10 text-white">
+            <rect x="25" y="60" width="50" height="20" rx="4" fill="currentColor" />
+            <rect x="30" y="45" width="40" height="15" rx="3" fill="currentColor" opacity="0.9" />
+            <rect x="35" y="30" width="30" height="15" rx="3" fill="currentColor" opacity="0.8" />
+            <circle cx="42" cy="22" r="2" fill="#FFD700" />
+            <circle cx="50" cy="20" r="2" fill="#FFD700" />
+            <circle cx="58" cy="22" r="2" fill="#FFD700" />
+            <rect x="48" y="15" width="4" height="8" fill="currentColor" opacity="0.7" />
+          </svg>
+        </div>
       ),
     },
     {
@@ -22,15 +26,17 @@ const GodparentsCarousel = () => {
       role: "Mesa de dulces",
       name: "Blanca Margarita Hernández Callejas y Marisela Callejas Téllez",
       svgIcon: (
-        <svg viewBox="0 0 100 100" className="w-16 h-16">
-          <circle cx="30" cy="35" r="6" fill="currentColor" opacity="0.8" />
-          <rect x="28" y="41" width="4" height="15" fill="currentColor" opacity="0.6" />
-          <circle cx="70" cy="30" r="5" fill="currentColor" opacity="0.9" />
-          <rect x="68" y="35" width="4" height="18" fill="currentColor" opacity="0.6" />
-          <circle cx="50" cy="50" r="8" fill="currentColor" />
-          <rect x="48" y="58" width="4" height="12" fill="currentColor" opacity="0.6" />
-          <rect x="20" y="70" width="60" height="3" rx="1" fill="currentColor" opacity="0.4" />
-        </svg>
+        <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <svg viewBox="0 0 100 100" className="w-10 h-10 text-white">
+            <circle cx="30" cy="35" r="8" fill="currentColor" />
+            <rect x="28" y="43" width="4" height="12" fill="currentColor" opacity="0.8" />
+            <circle cx="70" cy="30" r="6" fill="currentColor" opacity="0.9" />
+            <rect x="68" y="36" width="4" height="14" fill="currentColor" opacity="0.8" />
+            <circle cx="50" cy="50" r="10" fill="currentColor" />
+            <rect x="48" y="60" width="4" height="10" fill="currentColor" opacity="0.8" />
+            <ellipse cx="50" cy="75" rx="35" ry="3" fill="currentColor" opacity="0.4" />
+          </svg>
+        </div>
       ),
     },
     {
@@ -38,18 +44,9 @@ const GodparentsCarousel = () => {
       role: "Letras",
       name: "Gabriela María Ríos Albarrán",
       svgIcon: (
-        <svg viewBox="0 0 100 100" className="w-16 h-16">
-          <path d="M25 30 L35 30 L45 60 L40 60 L25 30 Z" fill="currentColor" />
-          <path d="M35 30 L45 30 L35 60 L30 60 L35 30 Z" fill="currentColor" opacity="0.8" />
-          <rect x="28" y="42" width="14" height="2" fill="currentColor" opacity="0.6" />
-          <path
-            d="M55 30 L65 30 L65 45 L75 45 L75 50 L65 50 L65 60 L60 60 L60 50 L55 50 L55 30 Z"
-            fill="currentColor"
-          />
-          <circle cx="80" cy="25" r="1.5" fill="currentColor" opacity="0.7" />
-          <circle cx="85" cy="35" r="1" fill="currentColor" opacity="0.5" />
-          <circle cx="75" cy="20" r="1" fill="currentColor" opacity="0.6" />
-        </svg>
+        <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <div className="text-white font-bold text-xl tracking-wider">TAM</div>
+        </div>
       ),
     },
     {
@@ -57,16 +54,18 @@ const GodparentsCarousel = () => {
       role: "Última muñeca",
       name: "Antonia Damiana Galván González",
       svgIcon: (
-        <svg viewBox="0 0 100 100" className="w-16 h-16">
-          <circle cx="50" cy="25" r="8" fill="currentColor" />
-          <rect x="45" y="33" width="10" height="20" rx="5" fill="currentColor" opacity="0.8" />
-          <rect x="40" y="40" width="6" height="12" rx="3" fill="currentColor" opacity="0.6" />
-          <rect x="54" y="40" width="6" height="12" rx="3" fill="currentColor" opacity="0.6" />
-          <rect x="47" y="53" width="6" height="12" rx="3" fill="currentColor" opacity="0.6" />
-          <circle cx="47" cy="22" r="1" fill="currentColor" opacity="0.4" />
-          <circle cx="53" cy="22" r="1" fill="currentColor" opacity="0.4" />
-          <path d="M47 27 Q50 29 53 27" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.6" />
-        </svg>
+        <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <svg viewBox="0 0 100 100" className="w-10 h-10 text-white">
+            <circle cx="50" cy="25" r="12" fill="currentColor" />
+            <ellipse cx="50" cy="45" rx="8" ry="15" fill="currentColor" opacity="0.9" />
+            <rect x="42" y="40" width="6" height="15" rx="3" fill="currentColor" opacity="0.7" />
+            <rect x="52" y="40" width="6" height="15" rx="3" fill="currentColor" opacity="0.7" />
+            <rect x="46" y="60" width="8" height="15" rx="4" fill="currentColor" opacity="0.8" />
+            <circle cx="46" cy="22" r="1.5" fill="#333" />
+            <circle cx="54" cy="22" r="1.5" fill="#333" />
+            <path d="M46 28 Q50 30 54 28" stroke="#333" strokeWidth="1.5" fill="none" />
+          </svg>
+        </div>
       ),
     },
     {
@@ -74,19 +73,62 @@ const GodparentsCarousel = () => {
       role: "Vals",
       name: "José Andrés Galván Vargas",
       svgIcon: (
-        <svg viewBox="0 0 100 100" className="w-16 h-16">
-          <circle cx="35" cy="20" r="5" fill="currentColor" />
-          <circle cx="65" cy="20" r="5" fill="currentColor" opacity="0.8" />
-          <rect x="32" y="25" width="6" height="15" rx="3" fill="currentColor" />
-          <rect x="62" y="25" width="6" height="15" rx="3" fill="currentColor" opacity="0.8" />
-          <rect x="29" y="35" width="5" height="10" rx="2" fill="currentColor" opacity="0.6" />
-          <rect x="36" y="35" width="5" height="10" rx="2" fill="currentColor" opacity="0.6" />
-          <rect x="59" y="35" width="5" height="10" rx="2" fill="currentColor" opacity="0.6" />
-          <rect x="66" y="35" width="5" height="10" rx="2" fill="currentColor" opacity="0.6" />
-          <path d="M25 55 Q50 45 75 55" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" />
-          <circle cx="30" cy="60" r="1" fill="currentColor" opacity="0.3" />
-          <circle cx="70" cy="60" r="1" fill="currentColor" opacity="0.3" />
-        </svg>
+        <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <svg viewBox="0 0 100 100" className="w-10 h-10 text-white">
+            <circle cx="35" cy="20" r="6" fill="currentColor" />
+            <circle cx="65" cy="20" r="6" fill="currentColor" opacity="0.9" />
+            <ellipse cx="35" cy="35" rx="5" ry="12" fill="currentColor" />
+            <ellipse cx="65" cy="35" rx="5" ry="12" fill="currentColor" opacity="0.9" />
+            <rect x="32" y="47" width="6" height="12" rx="3" fill="currentColor" opacity="0.7" />
+            <rect x="62" y="47" width="6" height="12" rx="3" fill="currentColor" opacity="0.7" />
+            <path d="M25 65 Q50 55 75 65" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.6" />
+            <circle cx="30" cy="70" r="2" fill="currentColor" opacity="0.5" />
+            <circle cx="70" cy="70" r="2" fill="currentColor" opacity="0.5" />
+          </svg>
+        </div>
+      ),
+    },
+    {
+      id: 6,
+      role: "Copas",
+      name: "Arely Tovar Galván",
+      svgIcon: (
+        <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <svg viewBox="0 0 100 100" className="w-10 h-10 text-white">
+            <path
+              d="M30 25 L30 35 Q30 45 40 50 L40 65 L35 65 L35 70 L65 70 L65 65 L60 65 L60 50 Q70 45 70 35 L70 25 Z"
+              fill="currentColor"
+            />
+            <path
+              d="M70 25 L70 35 Q70 45 60 50 L60 65 L65 65 L65 70 L75 70 L75 65 L70 65 L70 50 Q80 45 80 35 L80 25 Z"
+              fill="currentColor"
+              opacity="0.8"
+            />
+            <ellipse cx="50" cy="25" rx="20" ry="3" fill="currentColor" opacity="0.6" />
+            <ellipse cx="65" cy="25" rx="15" ry="2" fill="currentColor" opacity="0.5" />
+            <circle cx="45" cy="20" r="1" fill="#FFD700" />
+            <circle cx="55" cy="18" r="1" fill="#FFD700" />
+            <circle cx="65" cy="20" r="1" fill="#FFD700" />
+          </svg>
+        </div>
+      ),
+    },
+    {
+      id: 7,
+      role: "Invitación digital",
+      name: "Red",
+      svgIcon: (
+        <div className="w-16 h-16 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <svg viewBox="0 0 100 100" className="w-10 h-10 text-white">
+            <rect x="25" y="15" width="50" height="70" rx="8" fill="currentColor" />
+            <rect x="30" y="25" width="40" height="25" rx="3" fill="currentColor" opacity="0.3" />
+            <rect x="30" y="55" width="25" height="3" rx="1" fill="currentColor" opacity="0.6" />
+            <rect x="30" y="62" width="35" height="3" rx="1" fill="currentColor" opacity="0.6" />
+            <rect x="30" y="69" width="20" height="3" rx="1" fill="currentColor" opacity="0.6" />
+            <circle cx="65" cy="65" r="3" fill="#4ADE80" />
+            <path d="M35 35 L45 45 L60 30" stroke="white" strokeWidth="2" fill="none" />
+          </svg>
+        </div>
       ),
     },
   ]
@@ -118,16 +160,18 @@ const GodparentsCarousel = () => {
                 className="flex-shrink-0 w-80 mx-4"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: (index % 5) * 0.1 }}
+                transition={{ duration: 0.5, delay: (index % 7) * 0.1 }}
                 viewport={{ once: true }}
               >
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-pink-100 h-48">
-                  <div className="h-full bg-gradient-to-br from-pink-100 to-purple-100 flex flex-col items-center justify-center relative text-pink-600 p-6">
-                    <div className="text-lg font-bold text-pink-600 mb-3 uppercase tracking-wide text-center">
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-pink-100 h-56">
+                  <div className="h-full bg-gradient-to-br from-pink-50 to-purple-50 flex flex-col items-center justify-center relative p-6">
+                    <div className="text-lg font-bold text-pink-600 mb-4 uppercase tracking-wide text-center">
                       {godparent.role}
                     </div>
-                    <div className="flex items-center justify-center mb-3">{godparent.svgIcon}</div>
-                    <div className="text-sm font-medium text-purple-600 text-center leading-tight">
+                    <div className="flex items-center justify-center mb-4 transform hover:scale-110 transition-transform duration-300">
+                      {godparent.svgIcon}
+                    </div>
+                    <div className="text-sm font-medium text-purple-700 text-center leading-tight px-2">
                       {godparent.name}
                     </div>
                   </div>
@@ -166,7 +210,7 @@ const GodparentsCarousel = () => {
         }
         
         .animate-scroll {
-          animation: scroll 20s linear infinite;
+          animation: scroll 25s linear infinite;
         }
         
         .animate-scroll:hover {

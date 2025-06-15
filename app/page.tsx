@@ -83,11 +83,11 @@ export default function Home() {
         {/* Mensaje de la quinceañera */}
         <QuinceaneraMesage />
 
-        <DressCode />
-
         <GodparentsCarousel />
 
         <Itinerary />
+
+        <DressCode />
 
         <RsvpForm />
 

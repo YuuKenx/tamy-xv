@@ -110,7 +110,7 @@ const GodmotherVideo = ({ onVideoPlay, onVideoEnd }: GodmotherVideoProps) => {
             playsInline
             controls
           >
-            <source src="/video/mensaje.mp4" type="video/mp4" />
+            <source src="/videos/mensaje.mp4" type="video/mp4" />
             Tu navegador no soporta videos HTML5.
           </video>
 
@@ -119,9 +119,6 @@ const GodmotherVideo = ({ onVideoPlay, onVideoEnd }: GodmotherVideoProps) => {
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={togglePlay}
             >
-              <p className="text-white text-lg md:text-xl font-medium mb-4 text-center px-4">
-                Una princesa convocando a su hada madrina
-              </p>
               <button
                 className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-pink-600/90 flex items-center justify-center hover:bg-pink-700 transition-colors"
                 aria-label="Reproducir video"
