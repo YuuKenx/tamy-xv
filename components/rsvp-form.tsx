@@ -5,7 +5,7 @@ import type React from "react"
 import { motion } from "framer-motion"
 import { sendRsvp } from "@/app/actions"
 import { buscarInvitado } from "@/lib/invitados"
-import { Check, Loader2, User, AlertCircle } from "lucide-react"
+import { Check, Loader2, User, AlertCircle, MessageCircle } from "lucide-react"
 
 const RsvpForm = () => {
   const [formState, setFormState] = useState({
@@ -133,10 +133,20 @@ const RsvpForm = () => {
             </div>
             <h3 className="text-2xl font-bold text-green-700 mb-4">¡Gracias por confirmar!</h3>
             <div className="text-green-600 mb-6">{successMessage}</div>
-            <p className="text-gray-600">
-              Hemos enviado un correo de confirmación a tu email. Nos vemos el 9 de agosto para celebrar juntos este día
-              tan especial.
-            </p>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-center mb-2">
+                <MessageCircle size={20} className="text-blue-600 mr-2" />
+                <span className="text-blue-700 font-medium">Notificación por WhatsApp</span>
+              </div>
+              <p className="text-blue-600 text-sm">
+                Recibirás los detalles de confirmación por WhatsApp{" "}
+                {formState.phone ? "en tu número registrado" : "si proporcionaste tu teléfono"}. La anfitriona también
+                será notificada automáticamente.
+              </p>
+            </div>
+
+            <p className="text-gray-600">Nos vemos el 9 de agosto para celebrar juntos este día tan especial.</p>
           </motion.div>
         ) : (
           <motion.form
@@ -214,7 +224,8 @@ const RsvpForm = () => {
 
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                  Teléfono
+                  Teléfono (WhatsApp)
+                  <span className="text-green-600 text-xs ml-1">📱 Para recibir confirmación</span>
                 </label>
                 <input
                   type="tel"
@@ -223,7 +234,7 @@ const RsvpForm = () => {
                   value={formState.phone}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                  placeholder="Tu número de teléfono"
+                  placeholder="55 1234 5678"
                 />
               </div>
 
@@ -261,6 +272,18 @@ const RsvpForm = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 placeholder="¿Algún mensaje especial para Tamara?"
               ></textarea>
+            </div>
+
+            {/* Información sobre WhatsApp */}
+            <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center mb-2">
+                <MessageCircle size={20} className="text-green-600 mr-2" />
+                <span className="text-green-700 font-medium">Confirmación por WhatsApp</span>
+              </div>
+              <p className="text-green-600 text-sm">
+                Recibirás un mensaje de confirmación por WhatsApp con todos los detalles del evento. Si proporcionas tu
+                número de teléfono, te enviaremos la confirmación directamente.
+              </p>
             </div>
 
             {error && <div className="mb-6 p-3 bg-red-50 text-red-700 rounded-md">{error}</div>}
