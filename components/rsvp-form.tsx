@@ -1,10 +1,11 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import type React from "react"
 
 import { motion } from "framer-motion"
 import { sendRsvp } from "@/app/actions"
-import { Check, Loader2 } from "lucide-react"
+import { buscarInvitado } from "@/lib/invitados"
+import { Check, Loader2, User, AlertCircle } from "lucide-react"
 
 const RsvpForm = () => {
   const [formState, setFormState] = useState({
@@ -19,6 +20,41 @@ const RsvpForm = () => {
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string>("")
 
+  // Estados para la búsqueda de invitados
+  const [buscandoInvitado, setBuscandoInvitado] = useState(false)
+  const [invitadoEncontrado, setInvitadoEncontrado] = useState<{
+    encontrado: boolean
+    nombre?: string
+    cupo?: number
+    similitud?: number
+  }>({ encontrado: false })
+
+  // Buscar invitado cuando cambie el nombre
+  useEffect(() => {
+    const buscarEnLista = async () => {
+      if (formState.name.length >= 3) {
+        setBuscandoInvitado(true)
+        const resultado = await buscarInvitado(formState.name)
+        setInvitadoEncontrado(resultado)
+
+        // Si encontramos al invitado, actualizar el cupo automáticamente
+        if (resultado.encontrado && resultado.cupo) {
+          setFormState((prev) => ({
+            ...prev,
+            guests: resultado.cupo.toString(),
+          }))
+        }
+        setBuscandoInvitado(false)
+      } else {
+        setInvitadoEncontrado({ encontrado: false })
+        setFormState((prev) => ({ ...prev, guests: "1" }))
+      }
+    }
+
+    const timeoutId = setTimeout(buscarEnLista, 500) // Debounce de 500ms
+    return () => clearTimeout(timeoutId)
+  }, [formState.name])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormState((prev) => ({ ...prev, [name]: value }))
@@ -30,7 +66,10 @@ const RsvpForm = () => {
     setError(null)
 
     try {
-      const result = await sendRsvp(formState)
+      const result = await sendRsvp({
+        ...formState,
+        invitadoVerificado: invitadoEncontrado,
+      })
 
       if (result.success) {
         setStatus("success")
@@ -43,6 +82,7 @@ const RsvpForm = () => {
           guests: "1",
           message: "",
         })
+        setInvitadoEncontrado({ encontrado: false })
       } else {
         setStatus("error")
         setError(result.message || "Hubo un error al enviar tu confirmación. Por favor intenta de nuevo.")
@@ -52,6 +92,21 @@ const RsvpForm = () => {
       setError("Hubo un error al enviar tu confirmación. Por favor intenta de nuevo.")
       console.error(err)
     }
+  }
+
+  // Generar opciones de invitados basado en el cupo encontrado
+  const generarOpcionesInvitados = () => {
+    const maxInvitados = invitadoEncontrado.encontrado && invitadoEncontrado.cupo ? invitadoEncontrado.cupo : 6
+
+    const opciones = []
+    for (let i = 1; i <= maxInvitados; i++) {
+      opciones.push(
+        <option key={i} value={i.toString()}>
+          {i} {i === 1 ? "persona" : "personas"}
+        </option>,
+      )
+    }
+    return opciones
   }
 
   return (
@@ -93,20 +148,52 @@ const RsvpForm = () => {
             className="bg-white rounded-xl shadow-lg p-8"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
+              <div className="md:col-span-2">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Nombre completo
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formState.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                  placeholder="Tu nombre completo"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formState.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                    placeholder="Tu nombre completo"
+                  />
+                  {buscandoInvitado && (
+                    <div className="absolute right-3 top-2">
+                      <Loader2 size={20} className="animate-spin text-pink-500" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Indicador de estado del invitado */}
+                {formState.name.length >= 3 && !buscandoInvitado && (
+                  <div className="mt-2">
+                    {invitadoEncontrado.encontrado ? (
+                      <div className="flex items-center text-green-600 text-sm">
+                        <User size={16} className="mr-2" />
+                        <span>
+                          ✓ Invitado encontrado: <strong>{invitadoEncontrado.nombre}</strong>
+                          {invitadoEncontrado.similitud && invitadoEncontrado.similitud < 100 && (
+                            <span className="text-gray-500">
+                              {" "}
+                              (similitud: {Math.round(invitadoEncontrado.similitud)}%)
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center text-amber-600 text-sm">
+                        <AlertCircle size={16} className="mr-2" />
+                        <span>No se encontró en la lista de invitados. Puedes continuar con el registro.</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -140,9 +227,14 @@ const RsvpForm = () => {
                 />
               </div>
 
-              <div>
+              <div className="md:col-span-2">
                 <label htmlFor="guests" className="block text-sm font-medium text-gray-700 mb-1">
-                  Número de invitados (mínimo 1)
+                  Número de invitados
+                  {invitadoEncontrado.encontrado && invitadoEncontrado.cupo && (
+                    <span className="text-green-600 font-medium">
+                      (máximo {invitadoEncontrado.cupo} para {invitadoEncontrado.nombre})
+                    </span>
+                  )}
                 </label>
                 <select
                   id="guests"
@@ -151,12 +243,7 @@ const RsvpForm = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 >
-                  <option value="1">1 persona</option>
-                  <option value="2">2 personas</option>
-                  <option value="3">3 personas</option>
-                  <option value="4">4 personas</option>
-                  <option value="5">5 personas</option>
-                  <option value="6">6 personas</option>
+                  {generarOpcionesInvitados()}
                 </select>
               </div>
             </div>
