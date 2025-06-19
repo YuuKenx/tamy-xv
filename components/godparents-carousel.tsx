@@ -263,9 +263,11 @@ const GodparentsCarousel = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-pink-600 mb-4">Nuestros Padrinos</h2>
-          <p className="text-lg text-pink-500 max-w-2xl mx-auto">
-            Con amor y gratitud a quienes nos acompañan en este día tan especial
+          <p className="text-lg text-pink-500 max-w-2xl mx-auto italic">
+            "Gracias por ser parte de este sueño y por hacer posible que cada detalle de esta celebración sea perfecto.
+            Su amor y apoyo hacen que este día sea verdaderamente mágico."
           </p>
+          <p className="text-pink-600 font-medium mt-4">Con todo nuestro cariño ✨</p>
           <div className="w-24 h-1 bg-gradient-to-r from-pink-300 to-purple-300 mx-auto mt-6"></div>
         </motion.div>
 
@@ -299,23 +301,6 @@ const GodparentsCarousel = () => {
             ))}
           </div>
         </div>
-
-        {/* Texto de agradecimiento */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-sm p-6 max-w-2xl mx-auto border border-pink-100">
-            <p className="text-gray-700 italic text-lg">
-              "Gracias por ser parte de este sueño y por hacer posible que cada detalle de esta celebración sea
-              perfecto. Su amor y apoyo hacen que este día sea verdaderamente mágico."
-            </p>
-            <p className="text-pink-600 font-medium mt-4">Con todo nuestro cariño ✨</p>
-          </div>
-        </motion.div>
       </div>
 
       <style jsx global>{`

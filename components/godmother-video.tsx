@@ -128,17 +128,6 @@ const GodmotherVideo = ({ onVideoPlay, onVideoEnd }: GodmotherVideoProps) => {
             </div>
           )}
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-6 md:mt-8 text-center"
-        >
-          <p className="text-sm md:text-lg text-pink-700 px-4">
-            Un mensaje especial de Mariana, quien con mucho cariño acompaña a Tamy en este día tan importante.
-          </p>
-        </motion.div>
       </div>
     </section>
   )
