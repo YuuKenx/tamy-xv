@@ -53,7 +53,7 @@ ${formData.message ? `• *Mensaje:* "${formData.message}"` : ""}
 📅 *Recordatorio del evento:*
 • *Fecha:* 9 de Agosto, 2025
 • *Ceremonia:* 13:00 hrs - Iglesia San Judas Tadeo
-• *Recepción:* 16:00 hrs - Rivento Salón y Jardín
+• *Recepción:* 15:30 hrs - Rivento Salón y Jardín
 
 Tu presencia hará que este día sea aún más especial. ¡Esperamos verte pronto! ✨
 

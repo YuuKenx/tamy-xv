@@ -38,14 +38,14 @@ const Itinerary = () => {
         "Te invito a acompañarme en esta ceremonia especial donde agradeceré a Dios por estos 15 años de vida y recibiré la bendición para esta nueva etapa que comienza.",
       mapUrl: "https://maps.google.com/?q=Iglesia+San+Judas+Tadeo+Carboneras+Mineral+de+la+Reforma+Hidalgo",
       calendarUrl:
-        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Misa+de+XV+a%C3%B1os+de+Tamy&dates=20250809T180000Z/20250809T190000Z&details=Te+esperamos+en+la+iglesia+de+San+Judas+Tadeo%2C+Carboneras%2C+Mineral+de+la+Reforma%2C+Hidalgo.+Ubicaci%C3%B3n+exacta%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DIglesia%2BSan%2BJudas%2BTadeo%2BCarboneras%2BMineral%2Bde%2Bla%2BReforma%2BHidalgo&location=Judas+Tadeo+166%2C+Carboneras%2C+CP+42180%2C+Mineral+de+la+Reforma%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-30,reminder-1440",
+        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Misa+de+XV+a%C3%B1os+de+Tamy&dates=20250809T180000Z/20250809T190000Z&details=Te+esperamos+en+la+iglesia+de+San+Judas+Tadeo%2C+Carboneras%2C+Mineral+de+la+Reforma%2C+Hidalgo.+Ubicaci%C3%B3n+exacta%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DIglesia%2BSan%2BJudas%2BTadeo%2BCarboneras%2BMineral%2Bde%2Bla%2BReforma%2BHidalgo&location=Judas+Tadeo+166%2C+Carboneras%2C+CP+42180%2C+Mineral+de+la+Reforma%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-60,reminder-1440,reminder-5760",
       icon: <Calendar className="w-6 h-6" />,
       image: "/image/iglesia.jpg",
       color: "from-pink-400 to-pink-600",
     },
     {
       id: 2,
-      time: "16:00",
+      time: "15:30",
       title: "Recepción",
       location: "Rivento Salón y Jardín",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
@@ -53,14 +53,14 @@ const Itinerary = () => {
         "Recuerda que al ser parte importante de esta celebración es necesario tu participación e integración para construir juntos momentos mágicos.",
       mapUrl: "https://maps.google.com/?q=Rivento+Salon+Jardin+Pachuquilla+Hidalgo",
       calendarUrl:
-        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Recepci%C3%B3n+para+Fiesta+de+Tamy&dates=20250809T203000Z/20250810T010000Z&details=Te+esperamos+en+la+recepci%C3%B3n+de+los+XV+a%C3%B1os+de+Tamy+en+Rivento+Sal%C3%B3n+y+Jard%C3%ADn%2C+Pachuquilla.+Ubicaci%C3%B3n%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DRivento%2BSalon%2BJardin%2BPachuquilla%2BHidalgo&location=Carr.+a+Petr%C3%B3leos+%23200%2C+Centro%2C+42180+Pachuquilla%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-30,reminder-1440",
+        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Recepci%C3%B3n+XV+a%C3%B1os+de+Tamy&dates=20250809T203000Z/20250810T010000Z&details=Te+esperamos+en+la+recepci%C3%B3n+de+los+XV+a%C3%B1os+de+Tamy+en+Rivento+Sal%C3%B3n+y+Jard%C3%ADn%2C+Pachuquilla.+Ubicaci%C3%B3n%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DRivento%2BSalon%2BJardin%2BPachuquilla%2BHidalgo&location=Carr.+a+Petr%C3%B3leos+%23200%2C+Centro%2C+42180+Pachuquilla%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-60,reminder-1440,reminder-5760",
       icon: <Music className="w-6 h-6" />,
       image: "/image/salon.jpg",
       color: "from-purple-400 to-purple-600",
     },
     {
       id: 3,
-      time: "16:30",
+      time: "16:00",
       title: "Entrada de Tamy",
       location: "Rivento Salón y Jardín",
       address: "Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.",
@@ -68,7 +68,7 @@ const Itinerary = () => {
         "Ya todos en el salón recibamos con cariño a Tamy, hoy celebramos con alegría y gozo sus quince años de vida.",
       mapUrl: "https://maps.google.com/?q=Rivento+Salon+Jardin+Pachuquilla+Hidalgo",
       calendarUrl:
-        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Recepci%C3%B3n+para+Fiesta+de+Tamy&dates=20250809T203000Z/20250810T010000Z&details=Te+esperamos+en+la+recepci%C3%B3n+de+los+XV+a%C3%B1os+de+Tamy+en+Rivento+Sal%C3%B3n+y+Jard%C3%ADn%2C+Pachuquilla.+Ubicaci%C3%B3n%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DRivento%2BSalon%2BJardin%2BPachuquilla%2BHidalgo&location=Carr.+a+Petr%C3%B3leos+%23200%2C+Centro%2C+42180+Pachuquilla%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-30,reminder-1440",
+        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Entrada+de+Tamy+-+XV+a%C3%B1os&dates=20250809T210000Z/20250809T220000Z&details=Ya+todos+en+el+sal%C3%B3n+recibamos+con+cari%C3%B1o+a+Tamy%2C+hoy+celebramos+con+alegr%C3%ADa+y+gozo+sus+quince+a%C3%B1os+de+vida.+Ubicaci%C3%B3n%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DRivento%2BSalon%2BJardin%2BPachuquilla%2BHidalgo&location=Carr.+a+Petr%C3%B3leos+%23200%2C+Centro%2C+42180+Pachuquilla%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-60,reminder-1440,reminder-5760",
       icon: <Cake className="w-6 h-6" />,
       image: "/image/salon.jpg",
       color: "from-rose-400 to-rose-600",
@@ -194,6 +194,23 @@ const Itinerary = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Información sobre recordatorios */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="mt-12 bg-blue-50 border border-blue-200 rounded-xl p-6 text-center max-w-2xl mx-auto"
+        >
+          <div className="flex items-center justify-center mb-3">
+            <CalendarPlus size={24} className="text-blue-600 mr-2" />
+            <h3 className="text-lg font-bold text-blue-700">Recordatorios Automáticos</h3>
+          </div>
+          <p className="text-blue-600 text-sm">Al agendar en tu calendario, recibirás recordatorios automáticos:</p>
+          <div className="mt-3 text-blue-700 text-sm font-medium">
+            📅 5 de Agosto (4 días antes) • 📅 8 de Agosto (1 día antes) • ⏰ 1 hora antes del evento
+          </div>
+        </motion.div>
       </div>
     </section>
   )

@@ -5,7 +5,7 @@ import type React from "react"
 import { motion } from "framer-motion"
 import { sendRsvp } from "@/app/actions"
 import { buscarInvitado } from "@/lib/invitados"
-import { Check, Loader2, User, AlertCircle, MessageCircle } from "lucide-react"
+import { Check, Loader2, User, AlertCircle, MessageCircle, Calendar } from "lucide-react"
 
 const RsvpForm = () => {
   const [formState, setFormState] = useState({
@@ -121,6 +121,24 @@ const RsvpForm = () => {
         >
           Confirma tu Asistencia
         </motion.h2>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true }}
+          className="text-center mb-8 bg-amber-50 border border-amber-200 rounded-xl p-4 max-w-2xl mx-auto"
+        >
+          <div className="flex items-center justify-center mb-2">
+            <Calendar size={20} className="text-amber-600 mr-2" />
+            <span className="text-amber-700 font-bold">Fecha Límite de Confirmación</span>
+          </div>
+          <p className="text-amber-700 font-medium">
+            Por favor confirma tu asistencia antes del <span className="font-bold">27 de Julio de 2025</span>
+          </p>
+          <p className="text-amber-600 text-sm mt-1">
+            Esto nos ayudará a organizar mejor todos los detalles para que tengas una experiencia perfecta
+          </p>
+        </motion.div>
 
         {status === "success" ? (
           <motion.div
