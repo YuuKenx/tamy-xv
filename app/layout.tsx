@@ -6,8 +6,8 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Infinite Marquee Demo",
-  description: "Demostración de un carrusel infinito para mostrar patrocinadores o marcas",
+  title: "XV Tamy",
+  description: "Los XV de Tamy. Acompañame en esta hermosa experiencia",
 }
 
 export default function RootLayout({
