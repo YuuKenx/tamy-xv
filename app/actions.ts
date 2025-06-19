@@ -86,8 +86,8 @@ export async function sendRsvp(formData: RsvpFormData) {
 
 async function enviarMensajesWhatsApp(formData: RsvpFormData, invitadoInfo: any) {
   try {
-    // Número de la anfitriona (tu número)
-    const numeroAnfitriona = "+5215563759387"
+    // Número de la anfitriona (número oficial correcto)
+    const numeroAnfitriona = "+5217711279436"
 
     // Crear mensajes
     const mensajeInvitado = crearMensajeInvitado(formData, invitadoInfo)

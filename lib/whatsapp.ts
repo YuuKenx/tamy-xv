@@ -1,4 +1,5 @@
 // Función para enviar mensajes de WhatsApp usando la API de WhatsApp Business
+// Número oficial de la anfitriona: +52 1 771 127 9436
 export async function enviarWhatsApp(numero: string, mensaje: string) {
   try {
     // Para desarrollo, vamos a usar una API simulada
