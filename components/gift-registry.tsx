@@ -7,7 +7,7 @@ const GiftRegistry = () => {
     {
       id: 1,
       title: "Liverpool",
-      description: "Encuentra nuestra mesa de regalos en Liverpool. Puedes comprar en línea o en tienda física.",
+      description: "Encuentra nuestra mesa de regalos en Liverpool.",
       link: "https://mesaderegalos.liverpool.com.mx/milistaderegalos/51642519",
       linkText: "Comprar en Liverpool",
       logo: "/logos/liverpool.png",
@@ -93,21 +93,6 @@ const GiftRegistry = () => {
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mt-8 bg-white rounded-xl p-6 max-w-2xl mx-auto shadow-md"
-        >
-          <h3 className="text-lg font-bold text-pink-600 mb-3">💝 Información Importante</h3>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            Tu regalo, sin importar cuál elijas, será recibido con mucho amor y gratitud. Lo más importante para
-            nosotros es que nos acompañes en este día tan especial.
-          </p>
-          <p className="text-pink-600 font-medium mt-3">¡Gracias por ser parte de la celebración de Tamy! 💕</p>
-        </motion.div>
       </div>
     </section>
   )
