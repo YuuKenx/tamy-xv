@@ -108,10 +108,7 @@ ${formData.message ? `• Mensaje: "${formData.message}"` : ""}
 ¡Tu presencia hará que este día sea aún más especial!
 
 Con todo nuestro cariño,
-Familia de Tamara 💖
-
----
-Este es tu comprobante de confirmación. Guárdalo para tu referencia.`
+Familia de Tamara 💖`
   }
 
   // Función para copiar al portapapeles
@@ -555,22 +552,7 @@ Este es tu comprobante de confirmación. Guárdalo para tu referencia.`
                     <Download size={16} />
                     Descargar Imagen
                   </button>
-                  <button
-                    onClick={() => {
-                      const mailtoLink = `mailto:${formState.email || ""}?subject=${encodeURIComponent("Confirmación - XV Años de Tamy")}&body=${encodeURIComponent(emailContent)}`
-                      window.open(mailtoLink, "_blank")
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
-                  >
-                    <Mail size={16} />
-                    Abrir Email
-                  </button>
                 </div>
-
-                <p className="text-gray-600 text-xs mt-3 text-center">
-                  💡 Puedes copiar el texto y pegarlo en tu email favorito, descargar la imagen de agradecimiento, o
-                  abrir tu cliente de correo
-                </p>
               </div>
             </div>
           </div>
