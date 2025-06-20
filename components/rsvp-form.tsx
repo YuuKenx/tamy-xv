@@ -301,7 +301,7 @@ Familia de Tamara 💖`
             <h3 className="text-2xl font-bold text-green-700 mb-4">¡Gracias por confirmar!</h3>
             <div className="text-green-600 mb-6">{successMessage}</div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 mb-6">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex items-center justify-center mb-2">
                   <MessageCircle size={20} className="text-blue-600 mr-2" />
@@ -311,44 +311,6 @@ Familia de Tamara 💖`
                   ✅ La anfitriona ha sido notificada automáticamente de tu confirmación.
                 </p>
               </div>
-
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <div className="flex items-center justify-center mb-2">
-                  <Mail size={20} className="text-purple-600 mr-2" />
-                  <span className="text-purple-700 font-medium">Comprobante Email</span>
-                </div>
-                <p className="text-purple-600 text-sm">📧 Obtén tu comprobante de confirmación por email.</p>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-lg p-4 mb-4">
-              <h4 className="text-lg font-bold text-pink-700 mb-3">📧 Obtener Comprobante por Email</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <button
-                  onClick={() => setShowEmailModal(true)}
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm"
-                >
-                  <Mail size={16} />
-                  Ver Comprobante
-                </button>
-                <button
-                  onClick={() => copiarAlPortapapeles(emailContent)}
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                >
-                  <Copy size={16} />
-                  Copiar Texto
-                </button>
-                <button
-                  onClick={descargarImagenGracias}
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
-                >
-                  <Download size={16} />
-                  Descargar Imagen
-                </button>
-              </div>
-              <p className="text-pink-600 text-xs mt-2">
-                💡 Puedes copiar el texto para tu email, o descargar la imagen de agradecimiento
-              </p>
             </div>
 
             <p className="text-gray-600">Nos vemos el 9 de agosto para celebrar juntos este día tan especial.</p>
