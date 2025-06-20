@@ -4,7 +4,7 @@ import type React from "react"
 
 import { motion } from "framer-motion"
 import { buscarInvitado } from "@/lib/invitados"
-import { Check, Loader2, User, AlertCircle, MessageCircle, Calendar, Mail } from "lucide-react"
+import { Check, Loader2, User, AlertCircle, MessageCircle, Calendar, Mail, Copy, Download } from "lucide-react"
 
 const RsvpForm = () => {
   const [formState, setFormState] = useState({
@@ -18,6 +18,8 @@ const RsvpForm = () => {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string>("")
+  const [emailContent, setEmailContent] = useState<string>("")
+  const [showEmailModal, setShowEmailModal] = useState(false)
 
   // Estados para la búsqueda de invitados
   const [buscandoInvitado, setBuscandoInvitado] = useState(false)
@@ -59,16 +61,16 @@ const RsvpForm = () => {
     setFormState((prev) => ({ ...prev, [name]: value }))
   }
 
-  // Función para enviar email de confirmación al invitado
-  const enviarEmailConfirmacion = async (formData: any, invitadoInfo: any) => {
-    try {
-      const nombreMostrar = invitadoInfo.encontrado ? invitadoInfo.nombre : formData.name
-      const estadoInvitado = invitadoInfo.encontrado ? "✅ Verificado en lista" : "⚠️ Registro adicional"
+  // Función para generar el contenido del email
+  const generarEmailConfirmacion = (formData: any, invitadoInfo: any) => {
+    const nombreMostrar = invitadoInfo.encontrado ? invitadoInfo.nombre : formData.name
+    const estadoInvitado = invitadoInfo.encontrado ? "✅ Verificado en lista" : "⚠️ Registro adicional"
 
-      const emailBody = `
+    return `🌸 ¡Gracias por confirmar tu asistencia a los XV años de Tamy! 🌸
+
 Querido/a ${nombreMostrar},
 
-¡Gracias por confirmar tu asistencia a los XV años de Tamy!
+¡Estamos muy emocionados de que nos acompañes en esta celebración tan especial! 💕
 
 📋 RESUMEN DE TU CONFIRMACIÓN:
 • Nombre: ${formData.name}
@@ -77,34 +79,66 @@ ${formData.phone ? `• Teléfono: ${formData.phone}` : ""}
 • Invitados: ${formData.guests} personas
 • Estado: ${estadoInvitado}
 ${formData.message ? `• Mensaje: "${formData.message}"` : ""}
+• Fecha de confirmación: ${new Date().toLocaleString("es-MX")}
 
 📅 DETALLES DEL EVENTO:
-• Fecha: 9 de Agosto, 2025
-• Ceremonia: 13:00 hrs - Iglesia San Judas Tadeo
-  📍 166, Carboneras CP 42180 Mineral de la Reforma, Hgo.
-• Recepción: 15:30 hrs - Rivento Salón y Jardín
-  📍 Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.
+• Fecha: Sábado 9 de Agosto, 2025
+
+⛪ CEREMONIA RELIGIOSA:
+• Hora: 13:00 hrs
+• Lugar: Iglesia San Judas Tadeo
+• Dirección: 166, Carboneras CP 42180 Mineral de la Reforma, Hgo.
+• Google Maps: https://maps.google.com/?q=Iglesia+San+Judas+Tadeo+Carboneras+Mineral+de+la+Reforma+Hidalgo
+
+🎉 RECEPCIÓN:
+• Hora: 15:30 hrs
+• Lugar: Rivento Salón y Jardín
+• Dirección: Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.
+• Google Maps: https://maps.google.com/?q=Rivento+Salon+Jardin+Pachuquilla+Hidalgo
 
 👗 CÓDIGO DE VESTIMENTA:
 • Vestimenta formal
-• El color rosa está reservado para Tamy
+• IMPORTANTE: El color rosa está reservado para Tamy
 
-¡Esperamos verte en esta celebración tan especial!
+📝 RECORDATORIOS:
+• Confirma tu asistencia antes del 27 de Julio de 2025
+• Llega puntual para no perderte ningún momento especial
+• Trae tu mejor sonrisa y ganas de celebrar
 
-Con cariño,
+¡Tu presencia hará que este día sea aún más especial!
+
+Con todo nuestro cariño,
 Familia de Tamara 💖
-      `.trim()
 
-      const mailtoLink = `mailto:${formData.email}?subject=${encodeURIComponent("Confirmación - XV Años de Tamy")}&body=${encodeURIComponent(emailBody)}`
+---
+Este es tu comprobante de confirmación. Guárdalo para tu referencia.`
+  }
 
-      // Abrir cliente de correo
-      window.open(mailtoLink, "_blank")
-
-      return true
-    } catch (error) {
-      console.error("Error enviando email:", error)
-      return false
+  // Función para copiar al portapapeles
+  const copiarAlPortapapeles = async (texto: string) => {
+    try {
+      await navigator.clipboard.writeText(texto)
+      alert("¡Copiado al portapapeles! Ahora puedes pegarlo en tu email.")
+    } catch (err) {
+      // Fallback para navegadores que no soportan clipboard API
+      const textArea = document.createElement("textarea")
+      textArea.value = texto
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand("copy")
+      document.body.removeChild(textArea)
+      alert("¡Copiado al portapapeles! Ahora puedes pegarlo en tu email.")
     }
+  }
+
+  // Función para descargar la imagen de agradecimiento
+  const descargarImagenGracias = () => {
+    const link = document.createElement("a")
+    link.href = "/image/gracias.png"
+    link.download = "Gracias-XV-Tamy.png"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -143,6 +177,10 @@ Familia de Tamara 💖
           return
         }
       }
+
+      // Generar contenido del email
+      const emailConfirmacion = generarEmailConfirmacion(formState, invitadoInfo)
+      setEmailContent(emailConfirmacion)
 
       // Construir mensaje para WhatsApp (dirigido al anfitrión)
       const nombreMostrar = invitadoInfo.encontrado ? invitadoInfo.nombre : formState.name
@@ -183,13 +221,13 @@ Familia de Tamara 💖
       // Abrir WhatsApp
       window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank")
 
-      // Enviar email de confirmación al invitado
-      await enviarEmailConfirmacion(formState, invitadoInfo)
+      // Mostrar modal con opciones de email
+      setShowEmailModal(true)
 
       // Mostrar mensaje de éxito
       setStatus("success")
       setSuccessMessage(
-        `¡Gracias ${nombreMostrar}! Tu confirmación ha sido enviada por WhatsApp y recibirás un resumen por correo.`,
+        `¡Gracias ${nombreMostrar}! Tu confirmación ha sido enviada por WhatsApp. Ahora puedes obtener tu comprobante por email.`,
       )
 
       // Limpiar formulario
@@ -273,19 +311,47 @@ Familia de Tamara 💖
                   <span className="text-blue-700 font-medium">Notificación WhatsApp</span>
                 </div>
                 <p className="text-blue-600 text-sm">
-                  La anfitriona ha sido notificada automáticamente de tu confirmación.
+                  ✅ La anfitriona ha sido notificada automáticamente de tu confirmación.
                 </p>
               </div>
 
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                 <div className="flex items-center justify-center mb-2">
                   <Mail size={20} className="text-purple-600 mr-2" />
-                  <span className="text-purple-700 font-medium">Resumen por Email</span>
+                  <span className="text-purple-700 font-medium">Comprobante Email</span>
                 </div>
-                <p className="text-purple-600 text-sm">
-                  Se abrirá tu cliente de correo con un resumen completo del evento.
-                </p>
+                <p className="text-purple-600 text-sm">📧 Obtén tu comprobante de confirmación por email.</p>
               </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-lg p-4 mb-4">
+              <h4 className="text-lg font-bold text-pink-700 mb-3">📧 Obtener Comprobante por Email</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <button
+                  onClick={() => setShowEmailModal(true)}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm"
+                >
+                  <Mail size={16} />
+                  Ver Comprobante
+                </button>
+                <button
+                  onClick={() => copiarAlPortapapeles(emailContent)}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                >
+                  <Copy size={16} />
+                  Copiar Texto
+                </button>
+                <button
+                  onClick={descargarImagenGracias}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+                >
+                  <Download size={16} />
+                  Descargar Imagen
+                </button>
+              </div>
+              <p className="text-pink-600 text-xs mt-2">
+                💡 Puedes copiar el texto para tu email, o descargar la imagen de agradecimiento
+              </p>
             </div>
 
             <p className="text-gray-600">Nos vemos el 9 de agosto para celebrar juntos este día tan especial.</p>
@@ -429,7 +495,7 @@ Familia de Tamara 💖
                 </div>
                 <div className="flex items-center text-purple-600">
                   <Mail size={16} className="mr-2" />
-                  <span>Resumen por email para ti</span>
+                  <span>Comprobante para descargar</span>
                 </div>
               </div>
             </div>
@@ -453,6 +519,61 @@ Familia de Tamara 💖
               </button>
             </div>
           </motion.form>
+        )}
+
+        {/* Modal para mostrar el contenido del email */}
+        {showEmailModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold text-pink-600">📧 Tu Comprobante de Confirmación</h3>
+                  <button
+                    onClick={() => setShowEmailModal(false)}
+                    className="text-gray-500 hover:text-gray-700 text-2xl"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-lg mb-4 text-sm whitespace-pre-line font-mono">
+                  {emailContent}
+                </div>
+
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <button
+                    onClick={() => copiarAlPortapapeles(emailContent)}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <Copy size={16} />
+                    Copiar Texto
+                  </button>
+                  <button
+                    onClick={descargarImagenGracias}
+                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <Download size={16} />
+                    Descargar Imagen
+                  </button>
+                  <button
+                    onClick={() => {
+                      const mailtoLink = `mailto:${formState.email || ""}?subject=${encodeURIComponent("Confirmación - XV Años de Tamy")}&body=${encodeURIComponent(emailContent)}`
+                      window.open(mailtoLink, "_blank")
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+                  >
+                    <Mail size={16} />
+                    Abrir Email
+                  </button>
+                </div>
+
+                <p className="text-gray-600 text-xs mt-3 text-center">
+                  💡 Puedes copiar el texto y pegarlo en tu email favorito, descargar la imagen de agradecimiento, o
+                  abrir tu cliente de correo
+                </p>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </section>
