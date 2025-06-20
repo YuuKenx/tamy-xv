@@ -4,7 +4,7 @@ import type React from "react"
 
 import { motion } from "framer-motion"
 import { buscarInvitado } from "@/lib/invitados"
-import { Check, Loader2, User, AlertCircle, MessageCircle, Calendar } from "lucide-react"
+import { Check, Loader2, User, AlertCircle, MessageCircle, Calendar, Mail } from "lucide-react"
 
 const RsvpForm = () => {
   const [formState, setFormState] = useState({
@@ -59,6 +59,54 @@ const RsvpForm = () => {
     setFormState((prev) => ({ ...prev, [name]: value }))
   }
 
+  // Función para enviar email de confirmación al invitado
+  const enviarEmailConfirmacion = async (formData: any, invitadoInfo: any) => {
+    try {
+      const nombreMostrar = invitadoInfo.encontrado ? invitadoInfo.nombre : formData.name
+      const estadoInvitado = invitadoInfo.encontrado ? "✅ Verificado en lista" : "⚠️ Registro adicional"
+
+      const emailBody = `
+Querido/a ${nombreMostrar},
+
+¡Gracias por confirmar tu asistencia a los XV años de Tamy!
+
+📋 RESUMEN DE TU CONFIRMACIÓN:
+• Nombre: ${formData.name}
+• Email: ${formData.email}
+${formData.phone ? `• Teléfono: ${formData.phone}` : ""}
+• Invitados: ${formData.guests} personas
+• Estado: ${estadoInvitado}
+${formData.message ? `• Mensaje: "${formData.message}"` : ""}
+
+📅 DETALLES DEL EVENTO:
+• Fecha: 9 de Agosto, 2025
+• Ceremonia: 13:00 hrs - Iglesia San Judas Tadeo
+  📍 166, Carboneras CP 42180 Mineral de la Reforma, Hgo.
+• Recepción: 15:30 hrs - Rivento Salón y Jardín
+  📍 Carr. a Petróleos #200, Centro, 42180 Pachuquilla, Hgo.
+
+👗 CÓDIGO DE VESTIMENTA:
+• Vestimenta formal
+• El color rosa está reservado para Tamy
+
+¡Esperamos verte en esta celebración tan especial!
+
+Con cariño,
+Familia de Tamara 💖
+      `.trim()
+
+      const mailtoLink = `mailto:${formData.email}?subject=${encodeURIComponent("Confirmación - XV Años de Tamy")}&body=${encodeURIComponent(emailBody)}`
+
+      // Abrir cliente de correo
+      window.open(mailtoLink, "_blank")
+
+      return true
+    } catch (error) {
+      console.error("Error enviando email:", error)
+      return false
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus("loading")
@@ -96,25 +144,38 @@ const RsvpForm = () => {
         }
       }
 
-      // Construir mensaje para WhatsApp
+      // Construir mensaje para WhatsApp (dirigido al anfitrión)
       const nombreMostrar = invitadoInfo.encontrado ? invitadoInfo.nombre : formState.name
       const estadoInvitado = invitadoInfo.encontrado ? "✅ Verificado en lista" : "⚠️ Registro adicional"
 
-      let message = `🌸 *Confirmación XV Años de Tamy* 🌸\n\n`
-      message += `*Nombre:* ${formState.name}\n`
-      message += `*Email:* ${formState.email}\n`
+      let message = `🎉 *NUEVA CONFIRMACIÓN RECIBIDA* 🎉\n\n`
+      message += `Hola Lupita, tienes una nueva confirmación para los XV años de Tamy:\n\n`
+      message += `👤 *DATOS DEL INVITADO:*\n`
+      message += `• *Nombre ingresado:* ${formState.name}\n`
+      if (invitadoInfo.encontrado) {
+        message += `• *Nombre en lista:* ${invitadoInfo.nombre}\n`
+        message += `• *Cupo asignado:* ${invitadoInfo.cupo} personas\n`
+      }
+      message += `• *Email:* ${formState.email}\n`
       if (formState.phone) {
-        message += `*Teléfono:* ${formState.phone}\n`
+        message += `• *Teléfono:* ${formState.phone}\n`
       }
-      message += `*Invitados:* ${formState.guests} personas\n`
-      message += `*Estado:* ${estadoInvitado}\n`
+      message += `• *Invitados confirmados:* ${formState.guests} personas\n`
+      message += `• *Estado:* ${estadoInvitado}\n`
       if (formState.message) {
-        message += `*Mensaje:* "${formState.message}"\n`
+        message += `• *Mensaje:* "${formState.message}"\n`
       }
-      message += `\n📅 *Evento:* 9 de Agosto, 2025\n`
-      message += `⛪ *Ceremonia:* 13:00 hrs - Iglesia San Judas Tadeo\n`
-      message += `🎉 *Recepción:* 15:30 hrs - Rivento Salón y Jardín\n\n`
-      message += `¡Gracias por confirmar! Esperamos verte en la celebración ✨`
+      message += `• *Fecha de confirmación:* ${new Date().toLocaleString("es-MX")}\n\n`
+
+      if (!invitadoInfo.encontrado) {
+        message += `⚠️ *NOTA:* Esta persona no se encontró en la lista oficial de invitados. Revisa si hay errores de escritura o si necesitas agregarlo manualmente.\n\n`
+      }
+
+      message += `📊 *RESUMEN DEL EVENTO:*\n`
+      message += `📅 9 de Agosto, 2025\n`
+      message += `⛪ Ceremonia: 13:00 hrs - Iglesia San Judas Tadeo\n`
+      message += `🎉 Recepción: 15:30 hrs - Rivento Salón y Jardín\n\n`
+      message += `Sistema automático de confirmaciones - XV Años de Tamara 💕`
 
       // Número de WhatsApp de la anfitriona (formato correcto)
       const phoneNumber = "5217711279436" // +52 1 771 127 9436
@@ -122,9 +183,14 @@ const RsvpForm = () => {
       // Abrir WhatsApp
       window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank")
 
+      // Enviar email de confirmación al invitado
+      await enviarEmailConfirmacion(formState, invitadoInfo)
+
       // Mostrar mensaje de éxito
       setStatus("success")
-      setSuccessMessage(`¡Gracias ${nombreMostrar}! Tu confirmación ha sido enviada por WhatsApp.`)
+      setSuccessMessage(
+        `¡Gracias ${nombreMostrar}! Tu confirmación ha sido enviada por WhatsApp y recibirás un resumen por correo.`,
+      )
 
       // Limpiar formulario
       setFormState({
@@ -200,16 +266,26 @@ const RsvpForm = () => {
             <h3 className="text-2xl font-bold text-green-700 mb-4">¡Gracias por confirmar!</h3>
             <div className="text-green-600 mb-6">{successMessage}</div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-              <div className="flex items-center justify-center mb-2">
-                <MessageCircle size={20} className="text-blue-600 mr-2" />
-                <span className="text-blue-700 font-medium">Notificación por WhatsApp</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center justify-center mb-2">
+                  <MessageCircle size={20} className="text-blue-600 mr-2" />
+                  <span className="text-blue-700 font-medium">Notificación WhatsApp</span>
+                </div>
+                <p className="text-blue-600 text-sm">
+                  La anfitriona ha sido notificada automáticamente de tu confirmación.
+                </p>
               </div>
-              <p className="text-blue-600 text-sm">
-                Recibirás los detalles de confirmación por WhatsApp{" "}
-                {formState.phone ? "en tu número registrado" : "si proporcionaste tu teléfono"}. La anfitriona también
-                será notificada automáticamente.
-              </p>
+
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <div className="flex items-center justify-center mb-2">
+                  <Mail size={20} className="text-purple-600 mr-2" />
+                  <span className="text-purple-700 font-medium">Resumen por Email</span>
+                </div>
+                <p className="text-purple-600 text-sm">
+                  Se abrirá tu cliente de correo con un resumen completo del evento.
+                </p>
+              </div>
             </div>
 
             <p className="text-gray-600">Nos vemos el 9 de agosto para celebrar juntos este día tan especial.</p>
@@ -340,16 +416,22 @@ const RsvpForm = () => {
               ></textarea>
             </div>
 
-            {/* Información sobre WhatsApp */}
-            <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
-              <div className="flex items-center mb-2">
+            {/* Información sobre confirmaciones */}
+            <div className="mb-6 bg-gradient-to-r from-green-50 to-purple-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center mb-3">
                 <MessageCircle size={20} className="text-green-600 mr-2" />
-                <span className="text-green-700 font-medium">Confirmación por WhatsApp</span>
+                <span className="text-green-700 font-medium">Confirmación Automática</span>
               </div>
-              <p className="text-green-600 text-sm">
-                Recibirás un mensaje de confirmación por WhatsApp con todos los detalles del evento. Si proporcionas tu
-                número de teléfono, te enviaremos la confirmación directamente.
-              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center text-green-600">
+                  <MessageCircle size={16} className="mr-2" />
+                  <span>WhatsApp a la anfitriona</span>
+                </div>
+                <div className="flex items-center text-purple-600">
+                  <Mail size={16} className="mr-2" />
+                  <span>Resumen por email para ti</span>
+                </div>
+              </div>
             </div>
 
             {error && <div className="mb-6 p-3 bg-red-50 text-red-700 rounded-md">{error}</div>}
