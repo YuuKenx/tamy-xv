@@ -1,32 +1,42 @@
 "use client"
 import { motion } from "framer-motion"
-import { Gift, ShoppingBag, CreditCard } from "lucide-react"
+import { CreditCard, ExternalLink } from "lucide-react"
 
 const GiftRegistry = () => {
   const giftOptions = [
     {
       id: 1,
-      title: "Mesa de Regalos",
-      icon: <Gift size={32} />,
-      description: "Encuentra nuestra mesa de regalos en Liverpool con el código: XV-TAMARA-2025",
-      link: "#",
-      linkText: "Ver Mesa de Regalos",
+      title: "Liverpool",
+      description: "Encuentra nuestra mesa de regalos en Liverpool. Puedes comprar en línea o en tienda física.",
+      link: "https://mesaderegalos.liverpool.com.mx/milistaderegalos/51642519",
+      linkText: "Comprar en Liverpool",
+      logo: "/logos/liverpool.png",
+      bgColor: "bg-pink-100",
+      textColor: "text-pink-600",
+      buttonColor: "bg-pink-600 hover:bg-pink-700",
     },
     {
       id: 2,
-      title: "Tienda en Línea",
-      icon: <ShoppingBag size={32} />,
-      description: "Puedes comprar un regalo en línea y enviarlo directamente a nuestra dirección.",
-      link: "#",
-      linkText: "Comprar en Línea",
+      title: "Sears",
+      description: "Visita nuestra mesa de regalos en Sears. Encuentra el regalo perfecto para Tamy.",
+      link: "https://www.sears.com.mx/Mesa-de-Regalos/180961/te-invito-a-mi-xv-anos-tamara-ismar",
+      linkText: "Comprar en Sears",
+      logo: "/logos/sears.png",
+      bgColor: "bg-gray-100",
+      textColor: "text-gray-700",
+      buttonColor: "bg-gray-700 hover:bg-gray-800",
     },
     {
       id: 3,
-      title: "Cofre para Sobres",
+      title: "Cofre para Lluvia de Sobres",
       icon: <CreditCard size={32} />,
-      description: "Si prefieres dar un regalo en efectivo, habrá un buzón en la mesa de regalos.",
+      description:
+        "Si prefieres dar un regalo en efectivo, habrá un buzón en la mesa de regalos durante la celebración.",
       link: null,
       linkText: null,
+      bgColor: "bg-purple-100",
+      textColor: "text-purple-600",
+      buttonColor: null,
     },
   ]
 
@@ -53,11 +63,19 @@ const GiftRegistry = () => {
               viewport={{ once: true }}
               className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-shadow"
             >
-              <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4 text-pink-600">
-                {option.icon}
+              <div className={`w-16 h-16 ${option.bgColor} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                {option.logo ? (
+                  <img
+                    src={option.logo || "/placeholder.svg"}
+                    alt={`Logo ${option.title}`}
+                    className="h-10 w-auto object-contain"
+                  />
+                ) : (
+                  <div className={option.textColor}>{option.icon}</div>
+                )}
               </div>
 
-              <h3 className="text-xl font-bold text-pink-600 mb-3">{option.title}</h3>
+              <h3 className={`text-xl font-bold ${option.textColor} mb-3`}>{option.title}</h3>
 
               <p className="text-gray-600 mb-4">{option.description}</p>
 
@@ -66,14 +84,30 @@ const GiftRegistry = () => {
                   href={option.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-5 py-2 bg-pink-100 text-pink-600 rounded-full hover:bg-pink-200 transition-colors font-medium"
+                  className={`inline-flex items-center gap-2 px-5 py-2 ${option.buttonColor} text-white rounded-full transition-colors font-medium`}
                 >
+                  <ExternalLink size={16} />
                   {option.linkText}
                 </a>
               )}
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          viewport={{ once: true }}
+          className="text-center mt-8 bg-white rounded-xl p-6 max-w-2xl mx-auto shadow-md"
+        >
+          <h3 className="text-lg font-bold text-pink-600 mb-3">💝 Información Importante</h3>
+          <p className="text-gray-600 text-sm leading-relaxed">
+            Tu regalo, sin importar cuál elijas, será recibido con mucho amor y gratitud. Lo más importante para
+            nosotros es que nos acompañes en este día tan especial.
+          </p>
+          <p className="text-pink-600 font-medium mt-3">¡Gracias por ser parte de la celebración de Tamy! 💕</p>
+        </motion.div>
       </div>
     </section>
   )
