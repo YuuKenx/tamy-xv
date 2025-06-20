@@ -38,7 +38,7 @@ const Itinerary = () => {
         "Te invito a acompañarme en esta ceremonia especial donde agradeceré a Dios por estos 15 años de vida y recibiré la bendición para esta nueva etapa que comienza.",
       mapUrl: "https://maps.google.com/?q=Iglesia+San+Judas+Tadeo+Carboneras+Mineral+de+la+Reforma+Hidalgo",
       calendarUrl:
-        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Misa+de+XV+a%C3%B1os+de+Tamy&dates=20250809T180000Z/20250809T190000Z&details=Te+esperamos+en+la+iglesia+de+San+Judas+Tadeo%2C+Carboneras%2C+Mineral+de+la+Reforma%2C+Hidalgo.+Ubicaci%C3%B3n+exacta%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DIglesia%2BSan%2BJudas%2BTadeo%2BCarboneras%2BMineral%2Bde%2Bla%2BReforma%2BHidalgo&location=Judas+Tadeo+166%2C+Carboneras%2C+CP+42180%2C+Mineral+de+la+Reforma%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-60,reminder-1440,reminder-5760",
+        "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Misa+de+XV+a%C3%B1os+de+Tamy&dates=20250809T190000Z/20250809T200000Z&details=Te+esperamos+en+la+iglesia+de+San+Judas+Tadeo%2C+Carboneras%2C+Mineral+de+la+Reforma%2C+Hidalgo.+Ubicaci%C3%B3n+exacta%3A+https%3A%2F%2Fmaps.google.com%2F%3Fq%3DIglesia%2BSan%2BJudas%2BTadeo%2BCarboneras%2BMineral%2Bde%2Bla%2BReforma%2BHidalgo&location=Judas+Tadeo+166%2C+Carboneras%2C+CP+42180%2C+Mineral+de+la+Reforma%2C+Hgo.&ctz=America%2FMexico_City&add=reminder-60,reminder-1440,reminder-5760",
       icon: <Calendar className="w-6 h-6" />,
       image: "/image/iglesia.jpg",
       color: "from-pink-400 to-pink-600",

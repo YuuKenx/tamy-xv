@@ -3,7 +3,6 @@ import { useState, useEffect } from "react"
 import type React from "react"
 
 import { motion } from "framer-motion"
-import { sendRsvp } from "@/app/actions"
 import { buscarInvitado } from "@/lib/invitados"
 import { Check, Loader2, User, AlertCircle, MessageCircle, Calendar } from "lucide-react"
 
@@ -66,30 +65,79 @@ const RsvpForm = () => {
     setError(null)
 
     try {
-      const result = await sendRsvp({
-        ...formState,
-        invitadoVerificado: invitadoEncontrado,
-      })
-
-      if (result.success) {
-        setStatus("success")
-        setSuccessMessage(result.message || "¡Gracias por confirmar tu asistencia!")
-
-        setFormState({
-          name: "",
-          email: "",
-          phone: "",
-          guests: "1",
-          message: "",
-        })
-        setInvitadoEncontrado({ encontrado: false })
-      } else {
+      // Validaciones básicas
+      if (!formState.name || !formState.email) {
+        setError("Nombre y correo electrónico son requeridos")
         setStatus("error")
-        setError(result.message || "Hubo un error al enviar tu confirmación. Por favor intenta de nuevo.")
+        return
       }
+
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formState.email)) {
+        setError("Por favor ingresa un correo electrónico válido")
+        setStatus("error")
+        return
+      }
+
+      // Verificar invitado en la lista si no se verificó antes
+      let invitadoInfo = invitadoEncontrado
+      if (!invitadoInfo || !invitadoInfo.encontrado) {
+        invitadoInfo = await buscarInvitado(formState.name)
+      }
+
+      // Validar cupo de invitados
+      const numInvitados = Number.parseInt(formState.guests)
+      if (invitadoInfo.encontrado && invitadoInfo.cupo) {
+        if (numInvitados > invitadoInfo.cupo) {
+          setError(`El cupo máximo para ${invitadoInfo.nombre} es de ${invitadoInfo.cupo} personas`)
+          setStatus("error")
+          return
+        }
+      }
+
+      // Construir mensaje para WhatsApp
+      const nombreMostrar = invitadoInfo.encontrado ? invitadoInfo.nombre : formState.name
+      const estadoInvitado = invitadoInfo.encontrado ? "✅ Verificado en lista" : "⚠️ Registro adicional"
+
+      let message = `🌸 *Confirmación XV Años de Tamy* 🌸\n\n`
+      message += `*Nombre:* ${formState.name}\n`
+      message += `*Email:* ${formState.email}\n`
+      if (formState.phone) {
+        message += `*Teléfono:* ${formState.phone}\n`
+      }
+      message += `*Invitados:* ${formState.guests} personas\n`
+      message += `*Estado:* ${estadoInvitado}\n`
+      if (formState.message) {
+        message += `*Mensaje:* "${formState.message}"\n`
+      }
+      message += `\n📅 *Evento:* 9 de Agosto, 2025\n`
+      message += `⛪ *Ceremonia:* 13:00 hrs - Iglesia San Judas Tadeo\n`
+      message += `🎉 *Recepción:* 15:30 hrs - Rivento Salón y Jardín\n\n`
+      message += `¡Gracias por confirmar! Esperamos verte en la celebración ✨`
+
+      // Número de WhatsApp de la anfitriona (formato correcto)
+      const phoneNumber = "5217711279436" // +52 1 771 127 9436
+
+      // Abrir WhatsApp
+      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank")
+
+      // Mostrar mensaje de éxito
+      setStatus("success")
+      setSuccessMessage(`¡Gracias ${nombreMostrar}! Tu confirmación ha sido enviada por WhatsApp.`)
+
+      // Limpiar formulario
+      setFormState({
+        name: "",
+        email: "",
+        phone: "",
+        guests: "1",
+        message: "",
+      })
+      setInvitadoEncontrado({ encontrado: false })
     } catch (err) {
       setStatus("error")
-      setError("Hubo un error al enviar tu confirmación. Por favor intenta de nuevo.")
+      setError("Hubo un error al procesar tu confirmación. Por favor intenta de nuevo.")
       console.error(err)
     }
   }
