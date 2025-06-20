@@ -149,7 +149,7 @@ Familia de Tamara 💖
       const estadoInvitado = invitadoInfo.encontrado ? "✅ Verificado en lista" : "⚠️ Registro adicional"
 
       let message = `🎉 *NUEVA CONFIRMACIÓN RECIBIDA* 🎉\n\n`
-      message += `Hola Lupita, tienes una nueva confirmación para los XV años de Tamy:\n\n`
+      message += `Hola Gi, tienes una nueva confirmación para los XV años de Tamy:\n\n`
       message += `👤 *DATOS DEL INVITADO:*\n`
       message += `• *Nombre ingresado:* ${formState.name}\n`
       if (invitadoInfo.encontrado) {
