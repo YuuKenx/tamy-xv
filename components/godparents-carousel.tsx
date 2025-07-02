@@ -210,6 +210,53 @@ const GodparentsCarousel = () => {
     },
     {
       id: 7,
+      role: "Mariachi",
+      name: "María Isabel Callejas Jiménez",
+      svgIcon: (
+        <div className="w-16 h-16 bg-gradient-to-br from-red-400 via-yellow-400 to-green-400 rounded-2xl flex items-center justify-center shadow-xl">
+          <svg viewBox="0 0 100 100" className="w-12 h-12 text-white drop-shadow-lg">
+            {/* Guitarra */}
+            <ellipse cx="50" cy="65" rx="18" ry="25" fill="currentColor" />
+            <ellipse cx="50" cy="65" rx="12" ry="18" fill="currentColor" opacity="0.3" />
+
+            {/* Mástil de la guitarra */}
+            <rect x="47" y="25" width="6" height="40" rx="3" fill="currentColor" />
+
+            {/* Clavijas */}
+            <circle cx="44" cy="20" r="2" fill="#FFD700" />
+            <circle cx="50" cy="18" r="2" fill="#FFD700" />
+            <circle cx="56" cy="20" r="2" fill="#FFD700" />
+
+            {/* Cuerdas */}
+            <rect x="48" y="25" width="1" height="40" fill="#FFD700" opacity="0.8" />
+            <rect x="50" y="25" width="1" height="40" fill="#FFD700" opacity="0.8" />
+            <rect x="52" y="25" width="1" height="40" fill="#FFD700" opacity="0.8" />
+
+            {/* Boca de la guitarra */}
+            <circle cx="50" cy="65" r="6" fill="currentColor" opacity="0.5" />
+
+            {/* Notas musicales flotando */}
+            <circle cx="25" cy="30" r="2" fill="#FFD700" />
+            <rect x="27" y="25" width="1" height="8" fill="#FFD700" />
+            <path d="M28 25 Q32 22 35 25" stroke="#FFD700" strokeWidth="1" fill="none" />
+
+            <circle cx="75" cy="35" r="2" fill="#FFD700" />
+            <rect x="77" y="30" width="1" height="8" fill="#FFD700" />
+            <path d="M78 30 Q82 27 85 30" stroke="#FFD700" strokeWidth="1" fill="none" />
+
+            {/* Sombrero charro (pequeño) */}
+            <ellipse cx="50" cy="12" rx="8" ry="3" fill="#8B4513" />
+            <rect x="47" y="8" width="6" height="6" rx="1" fill="#8B4513" />
+
+            {/* Decoración mexicana */}
+            <circle cx="20" cy="70" r="2" fill="#FF69B4" opacity="0.7" />
+            <circle cx="80" cy="75" r="2" fill="#32CD32" opacity="0.7" />
+          </svg>
+        </div>
+      ),
+    },
+    {
+      id: 8,
       role: "Invitación digital",
       name: "Red",
       svgIcon: (
@@ -262,7 +309,7 @@ const GodparentsCarousel = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-pink-600 mb-4">Nuestros Padrinos</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-pink-600 mb-4">Mis Padrinos</h2>
           <p className="text-lg text-pink-500 max-w-2xl mx-auto italic">
             "Gracias por ser parte de este sueño y por hacer posible que cada detalle de esta celebración sea perfecto.
             Su amor y apoyo hacen que este día sea verdaderamente mágico."
@@ -281,7 +328,7 @@ const GodparentsCarousel = () => {
                 className="flex-shrink-0 w-80 mx-4"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: (index % 7) * 0.1 }}
+                transition={{ duration: 0.5, delay: (index % 8) * 0.1 }}
                 viewport={{ once: true }}
               >
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-pink-100 h-56">
@@ -314,7 +361,7 @@ const GodparentsCarousel = () => {
         }
         
         .animate-scroll {
-          animation: scroll 25s linear infinite;
+          animation: scroll 30s linear infinite;
         }
         
         .animate-scroll:hover {
